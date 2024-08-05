@@ -1,6 +1,6 @@
 from django.db import models
 from django.core.exceptions import ValidationError
-from Item import Item
+from .item import Item
 from django.contrib.auth.models import User
 
 class Bid(models.Model):

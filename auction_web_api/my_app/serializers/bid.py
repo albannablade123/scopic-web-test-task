@@ -1,6 +1,8 @@
-from rest_framework import serializers
+# from rest_framework import serializers
 from django.contrib.auth.models import User
-from models.bid import Bid
+from ..models.bid import Bid
+from rest_framework import serializers
+
 
 class BidSerializer(serializers.ModelSerializer):
 
