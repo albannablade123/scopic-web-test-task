@@ -1,0 +1,56 @@
+export type Item = {
+    id: String
+    name: String
+    expiry_time: String
+    starting_price: String
+}
+
+import { Tooltip } from '@nextui-org/react';
+
+
+import {EditIcon} from "../components/icons";
+import {DeleteIcon} from "../components/icons";
+import {EyeIcon} from "../components/icons";
+import ItemAction from '../components/itemAction'
+
+export const renderCell = (item: Item, columnKey: React.Key) => {
+    const cellValue = item[columnKey as keyof Item]
+
+    switch (columnKey) {
+      case "actions":
+        return <ItemAction id={item.id}/>;
+      default:
+        return cellValue;
+    }
+  }
+
+export const columns = [
+    {
+      key: "name",
+      label: "NAME",
+    },
+    {
+      key: "description",
+      label: "DESCRIPTION",
+    },
+    {
+      key: "expiry_time",
+      label: "EXPIRY TIME",
+    },
+    {
+      key: "smallImage",
+      label: "SMALL IMAGE",
+    },
+    {
+      key: "largeImage",
+      label: "LARGE IMAGE",
+    },
+    {
+      key: "starting_price",
+      label: "STARTING PRICE",
+    },
+    {
+      key: "actions",
+      label: "ACTIONS",
+    },
+  ];

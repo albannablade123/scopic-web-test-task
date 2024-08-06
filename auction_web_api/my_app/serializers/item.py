@@ -11,3 +11,7 @@ class ItemSerializer(serializers.ModelSerializer):
         ordering = ['-id']
         model = Item
         fields = ['id', 'name', 'description', 'smallImage', 'largeImage', 'starting_price', 'expiry_time','bids']
+        extra_kwargs = {
+            'smallImage': {'required': False, 'allow_blank': True},
+            'largeImage': {'required': False, 'allow_blank': True},
+        }
