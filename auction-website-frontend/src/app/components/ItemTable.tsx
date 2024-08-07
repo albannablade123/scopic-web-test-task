@@ -13,57 +13,12 @@ import { columns, Item, renderCell } from "../admin/column";
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { Input, Pagination } from "@nextui-org/react";
 import { SearchIcon } from "./icons";
-import { getAllItemActions } from "../lib/actions/items";
-
-const items = [
-  {
-    key: "1",
-    name: "Sample Item 1",
-    description: "This is a description for Sample Item 1.",
-    expiry_time: "2024-12-31T23:59:59Z",
-    smallImage: "http://example.com/small1.jpg",
-    largeImage: "http://example.com/large1.jpg",
-    starting_price: "50.00",
-  },
-  {
-    key: "2",
-    name: "Sample Item 2",
-    description: "This is a description for Sample Item 2.",
-    expiry_time: "2025-11-30T23:59:59Z",
-    smallImage: "http://example.com/small2.jpg",
-    largeImage: "http://example.com/large2.jpg",
-    starting_price: "75.00",
-  },
-  {
-    key: "3",
-    name: "Sample Item 3",
-    description: "This is a description for Sample Item 3.",
-    expiry_time: "2023-10-15T23:59:59Z",
-    smallImage: "http://example.com/small3.jpg",
-    largeImage: "http://example.com/large3.jpg",
-    starting_price: "120.00",
-  },
-  {
-    key: "4",
-    name: "Sample Item 4",
-    description: "This is a description for Sample Item 4.",
-    expiry_time: "2026-08-20T23:59:59Z",
-    smallImage: "http://example.com/small4.jpg",
-    largeImage: "http://example.com/large4.jpg",
-    starting_price: "150.00",
-  },
-];
-
-const convertedItems: Item[] = items.map((item) => ({
-  id: item.key,
-  name: item.name,
-  expiry_time: item.expiry_time,
-  starting_price: item.starting_price,
-}));
+import { ItemService } from "../lib/actions/ItemService";
 
 
 
 export default function ItemTable() {
+  const itemService = new ItemService('http://localhost:8000/api');
   const [filterValue, setFilterValue] = useState("");
   const hasSearchFilter = Boolean(filterValue);
   const [convertedItems, setConvertedItems] = useState<Item[]>([]);
@@ -72,9 +27,9 @@ export default function ItemTable() {
 
   useEffect(() => {
     const fetchItems = async () => {
-      const products = await getAllItemActions();
-      console.log('Fetched products:', products); // Print products to the console
-      setConvertedItems(products);
+      const fetchedItems = await itemService.getAllItemActions();
+      console.log('Fetched fetchedItems:', fetchedItems); // Print fetchedItems to the console
+      setConvertedItems(fetchedItems);
     };
     fetchItems();
   }, []);

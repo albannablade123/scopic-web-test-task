@@ -1,19 +1,57 @@
 "use client";
-import { createItem } from "@/app/lib/actions/items";
-import { ItemService } from "@/app/lib/actions/ItemService";
+
 import { useRouter } from "next/navigation";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { parse } from "path";
+import { ItemService } from "@/app/lib/actions/ItemService";
 
-
-export default function CreateItem() {
+export default function CreateItem(props: any) {
   const itemService = new ItemService('http://localhost:8000/api');
-  const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false)
+
+  const searchParams = useSearchParams();
+  const itemIdString =searchParams.get("id")
+  const itemId = itemIdString ? Number(itemIdString) : null;
+
   const [formData, setFormData] = useState({
     name: "",
     starting_price: "",
     description: "",
     expiry_time: "",
   });
+  useEffect(() => {
+    const fetchItemDetail = async (itemId: number) => {
+      try {
+        const itemDetail = await itemService.getItemById(itemId);
+        console.log("______________________________________")
+        console.log("Fetched products:", itemDetail); // Print products to the console
+        setFormData({
+          name: itemDetail.name,
+          starting_price: itemDetail.starting_price,
+          description: itemDetail.description,
+          expiry_time: await itemService.formatDateToInput(itemDetail.expiry_time),
+        });
+      } catch (error) {
+        setError("Failed to fetch item details");
+        console.error("Error fetching item:", error);
+      }
+    };
+    if (itemId) {
+      const parsedId = Number(itemId);
+      if (!isNaN(parsedId)) {
+
+        fetchItemDetail(parsedId);
+      } else {
+        setError("Invalid item ID");
+      }
+    } else {
+      setError("Item ID is missing");
+    }
+  }, [itemId]);
+
+  const router = useRouter();
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -26,22 +64,51 @@ export default function CreateItem() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const response = await itemService.createItem(formData);
-
-    
-    if (response) {
-      // Redirect or show success message
-      router.push("/admin/products");
-    } else {
-      // Handle error
-      console.error("Failed to create item");
+  
+    setError(null); // Reset any previous errors
+    setLoading(true); // Set loading state to true
+  
+    try {
+      if (itemId) {
+        const parsedId = Number(itemId);
+  
+        if (!isNaN(parsedId)) {
+          const response = await itemService.updateItem(formData, parsedId);
+  
+          if (response) {
+            // Redirect or show success message
+            router.push("/admin/products");
+          } else {
+            // Handle unsuccessful update
+            console.error("Failed to update item");
+            setError("Failed to update item");
+          }
+        } else {
+          setError("Invalid item ID");
+        }
+      } else {
+        setError("Item ID is missing");
+      }
+    } catch (error) {
+      // Handle errors during the API call
+      console.error("Error updating item:", error);
+      setError("An error occurred while updating the item");
+    } finally {
+      setLoading(false); // Reset loading state
     }
   };
 
+
   return (
     <div className="p-20 rounded-md mt-5 bg-white shadow-md">
-      <h1 className="text-2xl font-bold mb-6">Create New Item</h1>
-      <form action="" onSubmit={handleSubmit} className="flex flex-col space-y-4">
+      <h1 className="text-2xl font-bold mb-6">Update Item</h1>
+      <form
+        action=""
+        onSubmit={handleSubmit}
+        className="flex flex-col space-y-4"
+      >
+        {loading && <p className="text-blue-500">Loading...</p>}
+        {error && <p className="text-red-500">{error}</p>}
         <div className="flex flex-col">
           <label htmlFor="username" className="mb-1 text-gray-700">
             Item Name
