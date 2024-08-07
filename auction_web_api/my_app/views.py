@@ -7,6 +7,8 @@ from .api.item.delete import delete_item_handler
 from .api.item.get_list import get_item_list_handler
 from .api.item.get_by_id import get_item_by_id_handler
 from .api.item.update import update_item_handler
+from .api.user.login import login_handler
+from .api.user.register import register_handler
 
 # # Create your views here.
 @api_view(['GET', 'POST'])
@@ -25,3 +27,13 @@ def item(request: Request, id):
         return update_item_handler(request, id)
     elif request.method == 'DELETE':
         return delete_item_handler(request, id)
+    
+@api_view(['POST','GET'])
+def user_register(request: Request):
+    if request.method == 'POST':
+        return register_handler(request)
+    
+@api_view(['POST','GET'])
+def user_login(request: Request):
+    if request.method == 'POST':
+        return login_handler(request)

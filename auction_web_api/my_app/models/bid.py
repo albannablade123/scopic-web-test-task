@@ -1,10 +1,12 @@
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.conf import settings
+
 from .item import Item
 from django.contrib.auth.models import User
 
 class Bid(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     auto_bidding = models.BooleanField(default=False)

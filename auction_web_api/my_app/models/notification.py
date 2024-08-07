@@ -1,0 +1,10 @@
+from django.db import models
+from django.conf import settings
+
+from user import User
+
+class Notification(models.Model):
+    is_read = models.BooleanField(default=False)
+    message = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
