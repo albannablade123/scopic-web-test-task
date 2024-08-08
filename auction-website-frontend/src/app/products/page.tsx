@@ -46,17 +46,26 @@ export default function Home() {
 
   // Filter By Search
   const filteredItems = useMemo(() => {
-    let filteredListings = [...items];
+    if (
+      Array.isArray(items) ||
+      (typeof items === "object" &&
+        items !== null &&
+        typeof items[Symbol.iterator] === "function")
+    ) {
+      let filteredListings = [...items];
+      if (hasSearchFilter) {
+        filteredListings = filteredListings.filter(
+          (item) =>
+            item.name.toLowerCase().includes(filterValue.toLowerCase()) ||
+            item.description.toLowerCase().includes(filterValue.toLowerCase())
+        );
+      }
 
-    if (hasSearchFilter) {
-      filteredListings = filteredListings.filter(
-        (item) =>
-          item.name.toLowerCase().includes(filterValue.toLowerCase()) ||
-          item.description.toLowerCase().includes(filterValue.toLowerCase())
-      );
+      return filteredListings;
+    } else {
+      console.error("items is not iterable");
+      return [];
     }
-
-    return filteredListings;
   }, [items, filterValue, hasSearchFilter]);
 
   const [page, setPage] = useState(1);
@@ -68,7 +77,11 @@ export default function Home() {
     const start = (page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
 
-    return items.slice(start, end);
+    if (items != null) {
+      return items.slice(start, end);
+    } else {
+      return [];
+    }
   }, [page, filteredItems]);
 
   const [sortDescriptor, setSortDescriptor] = useState({
@@ -89,11 +102,14 @@ export default function Home() {
   };
 
   const sortedItems = useMemo(() => {
+    if (pageItems == null) {
+      return [];
+    }
     if (sortDescriptor.column) {
       return [...pageItems].sort((a: Item, b: Item) => {
         let firstValue: string | number | Date;
         let secondValue: string | number | Date;
-        console.log(sortDescriptor.column)
+        console.log(sortDescriptor.column);
         switch (sortDescriptor.column) {
           case "expiry_time":
             firstValue = new Date(a[sortDescriptor.column] as string);
@@ -181,7 +197,7 @@ export default function Home() {
           </div>
         </div>
         <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
-          {items.length === 0 ? (
+          {sortedItems.length === 0 ? (
             <div>No items available</div>
           ) : (
             sortedItems.map((item) => <ItemCard key={item.id} item={item} />)
@@ -203,13 +219,16 @@ const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
   const expiryDate = new Date(item.expiry_time);
   const formattedExpiryDate = expiryDate.toLocaleString();
   return (
-    <Link href={{
-      pathname: `/products/${item.id}`,
-      query: {
-        search: "search",
-        id: item.id
-      },
-    }} className="group">
+    <Link
+      href={{
+        pathname: `/products/${item.id}`,
+        query: {
+          search: "search",
+          id: item.id,
+        },
+      }}
+      className="group"
+    >
       <div className="aspect-w-1 aspect-h-1 bg-red-200 w-full rounded-lg overflow-hidden xl:aspect-w-7 xl:aspect-h-8">
         <Image
           alt=""

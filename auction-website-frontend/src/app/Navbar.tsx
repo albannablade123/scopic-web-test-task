@@ -1,3 +1,6 @@
+
+
+import Link from 'next/link'
 const Navbar = () => {
   return (
     <>
@@ -19,6 +22,12 @@ const Navbar = () => {
                 >
                   Item List
                 </a>
+                <Link
+                  href="/login"
+                  className="text-white hover:bg-white hover: text-black rounded-lg p-2"
+                >
+                  Login
+                </Link>
               </div>
             </div>
           </div>

@@ -9,6 +9,9 @@ from .api.item.get_by_id import get_item_by_id_handler
 from .api.item.update import update_item_handler
 from .api.user.login import login_handler
 from .api.user.register import register_handler
+from .api.user.logout import logout_handler
+from .api.user.login import get_user_handler
+
 
 # # Create your views here.
 @api_view(['GET', 'POST'])
@@ -33,7 +36,17 @@ def user_register(request: Request):
     if request.method == 'POST':
         return register_handler(request)
     
-@api_view(['POST','GET'])
+@api_view(['POST'])
 def user_login(request: Request):
     if request.method == 'POST':
         return login_handler(request)
+    
+@api_view(['POST'])
+def user_logout(request: Request):
+    if request.method == 'POST':
+        return logout_handler(request)
+    
+@api_view(['GET'])
+def user(request: Request):
+    if request.method == 'GET':
+        return get_user_handler(request)
