@@ -11,7 +11,6 @@ import json
 def create_item_handler(request: Request):
     try:
         payload = request.body
-
         if not payload:
             return JsonResponse(
                 {"message": "No data provided"}, status=status.HTTP_400_BAD_REQUEST
@@ -24,12 +23,15 @@ def create_item_handler(request: Request):
             return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
         else:
             error_messages = serializer.errors
+            print(error_messages)
+
 
             return JsonResponse(
                 {"message": error_messages}, status=status.HTTP_400_BAD_REQUEST
             )
 
     except Exception as e:
+        print(e)
         return JsonResponse(
             {"message": e}, status=status.HTTP_500_INTERNAL_SERVER_ERROR, safe=False
         )

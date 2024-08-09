@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import imagePlaceHolder from "../../images.png";
+import BidComponent from "@/app/components/BidComponent";
 
 const Horizontal = () => {
   return <hr className="w-[30% my-2]" />;
@@ -36,7 +37,12 @@ export default function Items() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [itemDetail, setItemDetail] = useState<Item>(initialItemDetail);
-
+  const [maxBidAmount, setMaxBidAmount] = useState("");
+  const [alertPercentage, setAlertPercentage] = useState(0);
+  const [configExist, setConfigExist] = useState(false);
+  const [autoBidActive, setAutoBidActive] = useState(false);
+  const [autoBidStatus, setAutoBidStatus] = useState(false);
+  const [highestBid, setHighestBid] = useState({});
   const [userId, setUserId] = useState("");
 
   const searchParams = useSearchParams();
@@ -54,20 +60,94 @@ export default function Items() {
       const content = await response.json();
 
       if (content.id) {
-        // User is authenticated and logged out
-        console.log(content);
-        console.log(content.id);
         setUserId(content.id);
+        fetchConfig(content.id);
       }
     };
-    const fetchItemDetail = async (itemId: number) => {
+
+    const fetchBids = async (itemId: number) => {
       try {
-        const itemDetail = (await itemService.getItemById(itemId)) as Item;
-        console.log("Fetched item detail:", itemDetail);
-        setItemDetail(itemDetail);
+        const bids = await itemService.getAllBidsByItemId(itemId, 1, 1);
+        console.log("Fetched bids:", bids);
+        if (bids.length > 0) {
+          const bid = bids.reduce((acc, bid) =>
+            acc.amount > bid.amount ? acc : bid
+          );
+
+          setHighestBid({
+            "amount" : bid.amount,
+            "userId": bid.user
+          });
+        } else {
+          
+          setHighestBid({
+            "amount" : itemDetail.starting_price,
+            "userId": null
+          });
+        }
       } catch (error) {
         setError("Failed to fetch item details");
         console.error("Error fetching item:", error);
+      }
+    };
+
+    const fetchItemDetail = async (itemId: number) => {
+      try {
+        const itemDetail = (await itemService.getItemById(itemId)) as Item;
+        setItemDetail(itemDetail);
+        console.log(itemDetail.image_large, "____________________")
+      } catch (error) {
+        setError("Failed to fetch item details");
+        console.error("Error fetching item:", error);
+      }
+    };
+
+    //Check if Auto Bid Object exist
+    const fetchAutoBidStatus = async (userId: string, itemId: number) => {
+      try {
+        if (!userId) return; // Exit if userId is not yet available
+        const response = await fetch(
+          `http://localhost:8000/api/autobid?user_id=${userId}&item_id=${itemId}`,
+          {
+            credentials: "include",
+          }
+        );
+
+        if (response.status === 404) {
+          // Auto-bid not found for the user and item
+          setAutoBidStatus(false);
+          return;
+        }
+        if (!response.ok) {
+          throw new Error("Failed to fetch auto-bid status");
+        }
+
+        const data = await response.json();
+        setAutoBidActive(data.auto_bidding_active); // Set checkbox state based on response
+        setAutoBidStatus(true);
+      } catch (err) {
+        setError("Failed to fetch auto-bid status");
+      }
+    };
+
+    const fetchConfig = async (id: number) => {
+      try {
+        const response = await fetch(`http://localhost:8000/api/config/${id}`);
+
+        if (response.status == 404) {
+          return;
+        }
+        if (!response.ok) {
+          throw new Error("Failed to fetch configuration");
+        }
+        const data = await response.json();
+        setMaxBidAmount(data.max_bid_amount);
+        setAlertPercentage(data.auto_bid_alert_percentage);
+        setConfigExist(true);
+      } catch (err) {
+        setError("Failed to fetch configuration");
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -75,6 +155,8 @@ export default function Items() {
       const parsedId = Number(itemId);
       if (!isNaN(parsedId)) {
         fetchItemDetail(parsedId);
+        fetchAutoBidStatus(userId, parsedId);
+        fetchBids(parsedId);
       } else {
         setError("Invalid item ID");
       }
@@ -83,7 +165,67 @@ export default function Items() {
     }
 
     getUserId();
-  }, [itemId]);
+  }, [itemId, userId]);
+
+  const handleCheckboxChange = async (e) => {
+    const isChecked = e.target.checked;
+    if (!configExist) {
+      alert("No configuration for auto-bid found");
+      setError(
+        "No configuration for auto-bid found, create one under auto-bid configuration"
+      );
+      return;
+    }
+    //If not created, create one
+    if (!autoBidStatus && isChecked) {
+      const body = {
+        auto_bidding_active: isChecked,
+        max_bid_amount: maxBidAmount,
+        auto_bid_alert_percentage: alertPercentage,
+        user: userId,
+        item: itemId,
+      };
+      //Create a new autobid
+      const response = await fetch(
+        `http://localhost:8000/api/autobid?user_id=${userId}&item_id=${itemId}`,
+        {
+          method: "POST", // Use POST to create a new auto-bid
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+        }
+      );
+
+      setAutoBidActive(true);
+      return;
+    }
+
+    //If created, update the bid
+    try {
+      const response = await fetch(
+        `http://localhost:8000/api/autobid/toggle?user_id=${userId}&item_id=${itemId}`,
+        {
+          method: "PATCH", // Use POST to enable, DELETE to disable
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ auto_bidding_active: isChecked }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to update auto-bid status");
+      }
+
+      setAutoBidActive(isChecked);
+    } catch (err) {
+      console.error("Failed to update auto-bid status", err);
+      setError("Failed to update auto-bid status");
+    }
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -93,11 +235,11 @@ export default function Items() {
     // You can add more validation logic here if needed
     if (!amount) {
       alert("Please enter a bid amount.");
+
       return;
     }
-    console.log(userId);
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/bid", {
+      const response = await fetch("http://localhost:8000/api/bid", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -111,10 +253,9 @@ export default function Items() {
         }),
       });
 
-      console.log(response);
-
       if (response.ok) {
         alert("Bid placed successfully!");
+        setHighestBid(Number(amount))
         // Optionally reset the amount
         setAmount("");
       } else {
@@ -123,8 +264,6 @@ export default function Items() {
         alert(`Error: ${errorMessage}`);
       }
     } catch (error) {
-      console.error("Error placing bid:", error);
-      console.log(error);
       alert("An error occurred while placing the bid.");
     }
   };
@@ -133,8 +272,8 @@ export default function Items() {
     <div className="grid grid-cols-1 md:grid-cols-2 gap-12  p-6 mt-10 px-10 mx-10">
       <div>
         <Image
-          alt=""
-          src={imagePlaceHolder}
+          alt={imagePlaceHolder}
+          src={itemDetail.image_large || imagePlaceHolder}
           width={500}
           height={500}
           objectFit="cover"
@@ -168,8 +307,7 @@ export default function Items() {
           <div className="mt-3 mb-3 ">
             <div className="grid grid-cols-2 gap-4 ">
               <div className=" grid grid-row-2 text-right p-3 ">
-                <h2 className="text-left text-base font-medium p-2">Latest Bid</h2>
-                <h3 className="text-left text-lg font-medium p-2">$18.00</h3>
+                <BidComponent highestBid={highestBid} userId={userId} />
               </div>
               <div className="mt-4 ">
                 <form onSubmit={handleSubmit}>
@@ -198,11 +336,12 @@ export default function Items() {
               <input
                 type="checkbox"
                 className="form-checkbox"
-                checked={false}
-                onChange={() => {}}
+                checked={autoBidActive}
+                onChange={handleCheckboxChange}
               />
               <span className="ml-2">Auto Bid</span>
             </label>
+            {error && <p className="text-red-500">{error}</p>}
           </div>
           <h3 className=" font-small text-slate-900 mt-6">Description</h3>
           <Horizontal />

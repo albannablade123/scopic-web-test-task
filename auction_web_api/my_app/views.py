@@ -16,6 +16,12 @@ from .api.bid.get_list import get_bid_list_handler
 from .api.notification.create import create_notification_handler
 from .api.notification.get_by_user import get_notification_list_handler
 
+from .api.autobid_configuration.get import get_autobid_config_list_handler
+from .api.autobid_configuration.create import create_autobid_config
+from .api.autobid_configuration.update import update_autobid_config_handler
+
+from .api.autobid.autobid import update_auto_bid, toggle_auto_bid, create_or_update_auto_bid, get_auto_bid
+
 
 # # Create your views here.
 @api_view(['GET', 'POST'])
@@ -70,3 +76,37 @@ def notification_collection(request: Request):
     
     if request.method == 'GET':
         return get_notification_list_handler(request)
+    
+@api_view(['POST'])
+def configuration_collection(request: Request):
+    if request.method == 'POST':
+        return create_autobid_config(request)
+    
+@api_view(['GET', 'PUT'])
+def configuration(request: Request, id):
+    if request.method == 'GET':
+        return get_autobid_config_list_handler(request, id)
+    if request.method == 'PUT':
+        return update_autobid_config_handler(request, id)
+
+
+    
+@api_view(['POST','GET'])
+def autobid_collection(request: Request):
+    if request.method == 'POST':
+        return create_or_update_auto_bid(request)
+    if request.method == 'GET':
+        return get_auto_bid(request)
+    
+
+@api_view(['GET', 'PUT'])
+def autobid(request: Request, id):
+    if request.method == 'GET':
+        return get_auto_bid(request)
+    # if request.method == 'PUT':
+    #     return update_autobidr(request, id)
+    
+@api_view(['PATCH'])
+def toggle_autobid(request: Request):
+    if request.method == 'PATCH':
+        return toggle_auto_bid(request)

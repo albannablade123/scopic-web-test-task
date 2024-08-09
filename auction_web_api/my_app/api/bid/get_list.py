@@ -17,7 +17,7 @@ def get_bid_list_handler(request: Request):
         user_id = request.query_params.get('user_id')
         page_size = request.query_params.get('page_size', 10)  # Default to 10 if not provided
         page_number = request.query_params.get('page', 1) 
-        
+        print(page_size)
 
         # Building the filter arguments dynamically
         filter_args = {}
@@ -31,6 +31,7 @@ def get_bid_list_handler(request: Request):
         paginator = Paginator(bids, page_size)
         try:
             bids_page = paginator.page(page_number)
+            
         except PageNotAnInteger:
             bids_page = paginator.page(1)
         except EmptyPage:

@@ -1,6 +1,8 @@
 from django.http.response import JsonResponse
 from rest_framework.request import Request
 from rest_framework import status
+
+from ...utils.process_bid import process_auto_bids
 from ...models.bid import Bid
 from ...serializers.bid import BidSerializer
 
@@ -23,6 +25,12 @@ def create_bid_handler(request: Request):
         if serializer.is_valid():
             bid = serializer.save()
 
+            item_id = bid_data['item']  # Assuming 'item' is a field in bid_data
+            user_id = bid_data['user']
+
+            # Process auto-bid settings after creating the bid
+            process_auto_bids(item_id,user_id)
+
             return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
         else:
             error_messages = serializer.errors
@@ -35,3 +43,6 @@ def create_bid_handler(request: Request):
         return JsonResponse(
             {"message": e}, status=status.HTTP_500_INTERNAL_SERVER_ERROR, safe=False
         )
+    
+
+

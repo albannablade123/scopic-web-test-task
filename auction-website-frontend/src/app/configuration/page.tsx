@@ -1,14 +1,50 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const AutoBidConfig = () => {
   const [maxBidAmount, setMaxBidAmount] = useState("");
-  const [alertPercentage, setAlertPercentage] = useState(90);
-  const [autoBiddingActive, setAutoBiddingActive] = useState(false);
+  const [alertPercentage, setAlertPercentage] = useState(0);
+  const [updateConfig, setUpdateConfig] = useState(false);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [configId, setConfigId] = useState("");
+  const searchParams = useSearchParams();
 
-  const handleSubmit = (e) => {
+  const userIdString = searchParams.get("userId");
+  const userId = userIdString ? Number(userIdString) : null;
+
+  useEffect(() => {
+    const fetchConfig = async () => {
+      try {
+        const response = await fetch(`http://localhost:8000/api/config/${userId}`);
+
+        if (response.status == 404) {
+          return;
+        }
+        if (!response.ok) {
+          throw new Error("Failed to fetch configuration");
+        }
+        const data = await response.json();
+        console.log('TEST BLUE TEST BLUE', data);
+        
+        setUpdateConfig(true);
+        setMaxBidAmount(data.max_bid_amount || "");
+        setAlertPercentage(data.auto_bid_alert_percentage || 90);
+        setConfigId(data.id)
+      } catch (err) {
+        console.error("Failed to fetch configuration", err);
+        setError("Failed to fetch configuration");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchConfig();
+  }, [userId]);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (alertPercentage > 100) {
@@ -16,12 +52,52 @@ const AutoBidConfig = () => {
       return;
     }
     const config = {
-      maxBidAmount,
-      alertPercentage,
-      autoBiddingActive,
+      "user": userId,
+      "max_bid_amount": maxBidAmount,
+      "auto_bid_alert_percentage": alertPercentage,
     };
-    localStorage.setItem("autoBidConfig", JSON.stringify(config));
-    console.log("Auto-bid configuration saved:", config);
+    try {
+      if (updateConfig) {
+        console.log(configId)
+        // If configuration exists, update it
+        const updateResponse = await fetch(`http://localhost:8000/api/config/${configId}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(config),
+        });
+
+        if (!updateResponse.ok) {
+          throw new Error("Failed to update configuration");
+        }
+
+        const result = await updateResponse.json();
+        alert("auto-bid configuration updated succesfully")
+        console.log("Auto-bid configuration updated:", result);
+      } else {
+        // Create new configuration
+        const createResponse = await fetch(`http://localhost:8000/api/config`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(config),
+        });
+
+        if (!createResponse.ok) {
+          throw new Error("Failed to create configuration");
+        }
+
+        const result = await createResponse.json();
+        console.log("Auto-bid configuration created:", result);
+        alert("auto-bid configuration updated succesfully")
+
+      }
+    } catch (error) {
+      console.error("Error saving configuration:", error);
+      setError("Failed to save configuration");
+    }
   };
 
   return (
@@ -65,7 +141,7 @@ const AutoBidConfig = () => {
         </div>
         <button
           type="submit"
-          className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+          className="px-4 py-2 bg-beige-dark text-white rounded-lg hover:bg-beige"
         >
           Save Configuration
         </button>

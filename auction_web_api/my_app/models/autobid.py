@@ -11,6 +11,8 @@ class Autobid(models.Model):
     remaining_bid_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     auto_bid_alert_percentage = models.IntegerField(default=90)
     auto_bidding_active = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True) 
+    updated_at = models.DateTimeField(auto_now=True)     
 
     def clean(self):
         if self.max_bid_amount <= self.current_auto_bid_amount:

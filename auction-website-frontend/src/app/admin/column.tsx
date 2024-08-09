@@ -38,11 +38,11 @@ export const columns = [
       label: "EXPIRY TIME",
     },
     {
-      key: "smallImage",
-      label: "SMALL IMAGE",
+      key: "start_time",
+      label: "START TIME",
     },
     {
-      key: "largeImage",
+      key: "large_image",
       label: "LARGE IMAGE",
     },
     {

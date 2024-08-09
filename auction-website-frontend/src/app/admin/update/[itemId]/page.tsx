@@ -20,6 +20,8 @@ export default function CreateItem(props: any) {
     starting_price: "",
     description: "",
     expiry_time: "",
+    start_time: "",
+    large_image: "",
   });
   useEffect(() => {
     const fetchItemDetail = async (itemId: number) => {
@@ -31,6 +33,8 @@ export default function CreateItem(props: any) {
           name: itemDetail.name,
           starting_price: itemDetail.starting_price,
           description: itemDetail.description,
+          large_image: itemDetail.large_email,
+          start_time: await itemService.formatDateToInput(itemDetail.start_time),
           expiry_time: await itemService.formatDateToInput(itemDetail.expiry_time),
         });
       } catch (error) {
@@ -153,6 +157,34 @@ export default function CreateItem(props: any) {
             placeholder="Item Description"
             className="p-3 border border-gray-300 rounded-md"
           ></textarea>
+        </div>
+        <div className="flex flex-col">
+          <label htmlFor="imageUrl" className="mt-4 mb-1 text-gray-700">
+            Image URL
+          </label>
+          <input
+            type="text"
+            id="large_image"
+            name="large_image"
+            placeholder="Enter image URL"
+            onChange={handleChange}
+            value={formData.large_image}
+            className="p-3 border border-gray-300 rounded-md"
+          />
+        </div>
+        <div className="flex flex-col">
+          <label htmlFor="expiryTime" className="mb-1 text-gray-700">
+            Start Time
+          </label>
+          <input
+            type="datetime-local"
+            id="start_time"
+            name="start_time"
+            onChange={handleChange}
+            value={formData.start_time}
+            required
+            className="p-3 border border-gray-300 rounded-md"
+          />
         </div>
         <div className="flex flex-col">
           <label htmlFor="expiryTime" className="mb-1 text-gray-700">

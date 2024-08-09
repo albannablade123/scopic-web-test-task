@@ -109,7 +109,6 @@ export default function Home() {
       return [...pageItems].sort((a: Item, b: Item) => {
         let firstValue: string | number | Date;
         let secondValue: string | number | Date;
-        console.log(sortDescriptor.column);
         switch (sortDescriptor.column) {
           case "expiry_time":
             firstValue = new Date(a[sortDescriptor.column] as string);
@@ -219,8 +218,8 @@ const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
   const expiryDate = new Date(item.expiry_time);
   const formattedExpiryDate = expiryDate.toLocaleString();
   return (
-    <a href="#">
-      <div className="aspect-w-1 aspect-h-1 bg-red-200 w-full rounded-lg overflow-hidden xl:aspect-w-7 xl:aspect-h-8">
+    <a className="shadow-sm p-3">
+      <div className="aspect-w-1 aspect-h-2 bg-red-200 w-full rounded-lg overflow-hidden xl:aspect-w-7 xl:aspect-h-9 ">
         <Image
           alt=""
           src={imagePlaceHolder}
@@ -240,20 +239,22 @@ const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
         {new Date(item.expiry_time).toLocaleString()}
       </h3>
       <p className="mt-1 text-lg font-medium text-gray-900">{item.name}</p>
-      <p>{item.starting_price}</p>
-      <button className="px-4 py-2 bg-beige-dark text-white rounded-lg hover:bg-beige mt-1">
-        <Link
-          href={{
-            pathname: `/products/${item.id}`,
-            query: {
-              search: "search",
-              id: item.id,
-            },
-          }}
-        >
-          Bid Now
-        </Link>
-      </button>
+      <p>Starts at: {item.starting_price}</p>
+      <div className="flex justify-end mt-2 ">
+        <button className="px-4 py-2 bg-beige-dark text-white rounded-lg hover:bg-beige mt-2 mr-6">
+          <Link
+            href={{
+              pathname: `/products/${item.id}`,
+              query: {
+                search: "search",
+                id: item.id,
+              },
+            }}
+          >
+            Bid Now
+          </Link>
+        </button>
+      </div>
     </a>
   );
 };

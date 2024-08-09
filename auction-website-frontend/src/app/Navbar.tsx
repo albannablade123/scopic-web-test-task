@@ -47,11 +47,6 @@ const Navbar = () => {
 
           const notificationsContent = await response.json();
           setNotification(notificationsContent["notifications"]);
-          console.log(
-            notification,
-            userId,
-            notificationsContent["notifications"]
-          );
         } catch (e) {
           console.error("Error fetching notifications:", e);
         }
@@ -86,8 +81,8 @@ const Navbar = () => {
       <div className="flex items-center justify-between h-16">
         <div className="flex items-center">
           <div className="flex-shrink-0">
-            <a href="/" className="text-white">
-              Logo
+          <a className="text-white italic font-bold">
+              Antique Auction
             </a>
             <a
               href="/products"
@@ -95,20 +90,27 @@ const Navbar = () => {
             >
               Item List
             </a>
-            <a
-              href="/configuration"
+
+            <Link
               className="text-white hover:bg-white hover: text-black rounded-lg p-2 ml-3"
+              href={{
+                pathname: "/configuration",
+                query: {
+                  search: "search",
+                  userId: userId,
+                },
+              }}
             >
               auto-bid configuration
-            </a>
-            {isAdmin &&
+            </Link>
+            {isAdmin && (
               <a
                 href="/admin/products"
                 className="text-white hover:bg-white hover: text-black rounded-lg p-2 ml-3"
               >
                 Admin Dashboard
               </a>
-            }
+            )}
           </div>
         </div>
         <div className="hidden md:block">
@@ -146,8 +148,8 @@ const Navbar = () => {
       <div className="flex items-center justify-between h-16">
         <div className="flex items-center">
           <div className="flex-shrink-0">
-            <a href="/" className="text-white">
-              Logo
+            <a href="/" className="text-white italic font-bold">
+              Antique Auction
             </a>
           </div>
         </div>
@@ -155,7 +157,7 @@ const Navbar = () => {
           <div className="al-4 flex items-center space-x-4">
             <Link
               href="/login"
-              className="text-white hover:bg-white hover: text-black rounded-lg p-2"
+              className="text-white hover:bg-slate-800: text-black rounded-lg p-2"
             >
               Login
             </Link>

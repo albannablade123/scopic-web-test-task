@@ -151,8 +151,8 @@ export default function Items() {
     <div className="grid grid-cols-1 md:grid-cols-2 gap-12  p-6 mt-10 px-10 mx-10">
       <div>
         <Image
-          alt=""
-          src={imagePlaceHolder}
+          alt={imagePlaceHolder}
+          src={itemDetail?.image_large}
           width={500}
           height={500}
           objectFit="cover"
@@ -223,24 +223,6 @@ export default function Items() {
                 </h2>
                 <h3 className="text-left text-lg font-medium p-2">$18.00</h3>
               </div>
-              {/* <div className="mt-4 ">
-                <form onSubmit={handleSubmit}>
-                  <input
-                    type="number"
-                    value={amount}
-                    onChange={(e) => setAmount(e.target.value)}
-                    placeholder="Enter your bid"
-                    className="px-4 py-2 border rounded-lg w-full mb-4"
-                    required
-                  />
-                  <button
-                    type="submit"
-                    className="px-4 py-2 bg-beige-dark text-white rounded-lg hover:bg-beige ml-2"
-                  >
-                    Bid Now
-                  </button>
-                </form>
-              </div> */}
             </div>
           </div>
           <Horizontal />

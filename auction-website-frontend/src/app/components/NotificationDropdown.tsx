@@ -1,8 +1,6 @@
 import React from "react";
 
 const NotificationsDropdown = ({ notifications, isOpen, onClose }) => {
-  console.log("_______DDDDDDDDDDDD");
-  console.log(notifications);
   return (
     <div
       style={{ top: "2rem" }}
@@ -22,8 +20,8 @@ const NotificationsDropdown = ({ notifications, isOpen, onClose }) => {
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
                 maxWidth: '346px',
-                lineHeight: '1.2em',
-                height: '3.4em',
+                lineHeight: '1.5em',
+                height: '4.7em',
                 textAlign: 'left',
             }}
               className="p-2 border-b last:border-b-0 mb-2"

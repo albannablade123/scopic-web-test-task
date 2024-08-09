@@ -136,7 +136,7 @@ export default function ItemTable() {
         {(item) => (
           <TableRow key={item.key}>
             {(columnKey) => (
-              <TableCell>{renderCell(item, columnKey)}</TableCell>
+              <TableCell className="max-w-xs truncate">{renderCell(item, columnKey)}</TableCell>
             )}
           </TableRow>
         )}

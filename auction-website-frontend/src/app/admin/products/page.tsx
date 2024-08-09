@@ -8,7 +8,7 @@ export default async function admin() {
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-3xl font-bold">Item Table</h1>
           <Link href="/admin/add">
-            <button className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+            <button className="px-4 py-2 bg-beige-dark text-white rounded-lg hover:bg-beige">
               Create Item
             </button>
           </Link>

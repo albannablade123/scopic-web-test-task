@@ -1,10 +1,10 @@
-from ..models.autobid import AutoBid
+from ..models.autobid import Autobid
 from rest_framework import serializers
 
 
 class AutobidSerializer(serializers.ModelSerializer):
     class Meta:
-        model = AutoBid
+        model = Autobid
         fields = ['user', 'item', 'max_bid_amount', 'remaining_bid_amount', 'auto_bid_alert_percentage', 'auto_bidding_active']
 
         def validate(self, data):
