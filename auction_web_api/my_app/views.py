@@ -11,6 +11,10 @@ from .api.user.login import login_handler
 from .api.user.register import register_handler
 from .api.user.logout import logout_handler
 from .api.user.login import get_user_handler
+from .api.bid.create import create_bid_handler
+from .api.bid.get_list import get_bid_list_handler
+from .api.notification.create import create_notification_handler
+from .api.notification.get_by_user import get_notification_list_handler
 
 
 # # Create your views here.
@@ -50,3 +54,19 @@ def user_logout(request: Request):
 def user(request: Request):
     if request.method == 'GET':
         return get_user_handler(request)
+    
+@api_view(['POST', 'GET'])
+def bid_collection(request: Request):
+    if request.method == 'POST':
+        return create_bid_handler(request)
+    
+    if request.method == 'GET':
+        return get_bid_list_handler(request)
+    
+@api_view(['POST', 'GET'])
+def notification_collection(request: Request):
+    if request.method == 'POST':
+        return create_notification_handler(request)
+    
+    if request.method == 'GET':
+        return get_notification_list_handler(request)

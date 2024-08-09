@@ -8,6 +8,7 @@ urlpatterns = [
     re_path(r'^api/login$', views.user_login, name='user_login'),
     re_path(r'^api/logout$', views.user_logout, name='user_logout'),
     re_path(r'^api/user$', views.user, name='get_user'),
-
+    re_path(r'^api/bid$', views.bid_collection, name='create_bid'),
+    re_path(r'^api/notification$', views.notification_collection, name='notification'),
 
 ]

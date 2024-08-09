@@ -9,7 +9,7 @@ from django.contrib.auth import get_user_model
 
 from django.http.response import JsonResponse
 def logout_handler(request: Request):
-
+    print("reached here")
     response = Response()
     response.delete_cookie("jwt")
     response.data = {

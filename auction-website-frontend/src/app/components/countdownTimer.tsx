@@ -50,7 +50,7 @@ export default function CountdownTimer(props: any) {
       {closingTime ? (
         <h1>Bid Closed</h1>
       ) : (
-        <div className="flex justify-center items-center p-6 bg-gray-100 rounded-lg shadow-md">
+        <div className="flex justify-center items-center p-6 bg-beige rounded-lg shadow-md">
           <div className="flex space-x-4">
             <div className="flex flex-col items-center bg-white p-4 rounded-lg shadow-sm">
               <span className="text-4xl font-bold text-gray-800">{days}</span>

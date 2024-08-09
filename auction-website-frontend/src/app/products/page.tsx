@@ -219,16 +219,7 @@ const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
   const expiryDate = new Date(item.expiry_time);
   const formattedExpiryDate = expiryDate.toLocaleString();
   return (
-    <Link
-      href={{
-        pathname: `/products/${item.id}`,
-        query: {
-          search: "search",
-          id: item.id,
-        },
-      }}
-      className="group"
-    >
+    <a href="#">
       <div className="aspect-w-1 aspect-h-1 bg-red-200 w-full rounded-lg overflow-hidden xl:aspect-w-7 xl:aspect-h-8">
         <Image
           alt=""
@@ -245,11 +236,24 @@ const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
           onLoadingComplete={() => setLoading(false)}
         />
       </div>
-      <h3 className="mt-4 text-sm text-gray-700">{item.name}</h3>
-      <p className="mt-1 text-lg font-medium text-gray-900">
+      <h3 className="mt-4 text-sm text-gray-700">
         {new Date(item.expiry_time).toLocaleString()}
-      </p>
+      </h3>
+      <p className="mt-1 text-lg font-medium text-gray-900">{item.name}</p>
       <p>{item.starting_price}</p>
-    </Link>
+      <button className="px-4 py-2 bg-beige-dark text-white rounded-lg hover:bg-beige mt-1">
+        <Link
+          href={{
+            pathname: `/products/${item.id}`,
+            query: {
+              search: "search",
+              id: item.id,
+            },
+          }}
+        >
+          Bid Now
+        </Link>
+      </button>
+    </a>
   );
 };

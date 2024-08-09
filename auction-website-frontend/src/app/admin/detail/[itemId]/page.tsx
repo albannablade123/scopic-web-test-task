@@ -4,7 +4,7 @@ import { ItemService } from "@/app/lib/actions/ItemService";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import imagePlaceHolder from "../../images.png";
+import imagePlaceHolder from "../../../images.png";
 
 const Horizontal = () => {
   return <hr className="w-[30% my-2]" />;
@@ -36,6 +36,7 @@ export default function Items() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [itemDetail, setItemDetail] = useState<Item>(initialItemDetail);
+  const [bids, setBids] = useState([]);
 
   const [userId, setUserId] = useState("");
 
@@ -71,10 +72,24 @@ export default function Items() {
       }
     };
 
+    
+
+    const fetchBids = async (itemId: number) => {
+      try {
+        const bids = await itemService.getAllBidsByItemId(itemId);
+        console.log("Fetched bids:", bids);
+        setBids(bids);
+      } catch (error) {
+        setError("Failed to fetch item details");
+        console.error("Error fetching item:", error);
+      }
+    };
+
     if (itemId) {
       const parsedId = Number(itemId);
       if (!isNaN(parsedId)) {
         fetchItemDetail(parsedId);
+        fetchBids(parsedId);
       } else {
         setError("Invalid item ID");
       }
@@ -129,6 +144,9 @@ export default function Items() {
     }
   };
 
+  const sortedBids = bids.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-12  p-6 mt-10 px-10 mx-10">
       <div>
@@ -146,6 +164,38 @@ export default function Items() {
           )}
           onLoad={() => setLoading(false)}
         />
+        <div>
+          <h2>Bid History</h2>
+          <div className="max-h-48 overflow-y-auto">
+            {bids.length === 0 ? (
+              <div className="text-center text-gray-500 p-4">
+                <p>No bids have been placed yet.</p>
+              </div>
+            ) : (
+              sortedBids.map((bid, index) => (
+                <div
+                  key={index}
+                  className="bg-white p-4 rounded-lg shadow-md mb-4"
+                >
+                  <h3 className="text-lg font-semibold text-gray-800">
+                    Amount:{" "}
+                    <span className="text-green-600">${bid.amount}</span>
+                  </h3>
+                  <div className="flex justify-between text-gray-600">
+                    <p>User ID: {bid.user}</p>
+                    <p>Created: {new Date(bid.timestamp).toLocaleString()}</p>
+                  </div>
+                  <p className="text-gray-600">
+                    Is Auto Bid:{" "}
+                    <span className="text-blue-600">
+                      {bid.auto_bidding ? "True" : "False"}
+                    </span>
+                  </p>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
       </div>
       <div className="mx-10">
         <div className="flex flex-col gap-1 text-slate-500 text-sm">
@@ -168,10 +218,12 @@ export default function Items() {
           <div className="mt-3 mb-3 ">
             <div className="grid grid-cols-2 gap-4 ">
               <div className=" grid grid-row-2 text-right p-3 ">
-                <h2 className="text-left text-base font-medium p-2">Latest Bid</h2>
+                <h2 className="text-left text-base font-medium p-2">
+                  Latest Bid
+                </h2>
                 <h3 className="text-left text-lg font-medium p-2">$18.00</h3>
               </div>
-              <div className="mt-4 ">
+              {/* <div className="mt-4 ">
                 <form onSubmit={handleSubmit}>
                   <input
                     type="number"
@@ -188,7 +240,7 @@ export default function Items() {
                     Bid Now
                   </button>
                 </form>
-              </div>
+              </div> */}
             </div>
           </div>
           <Horizontal />
@@ -210,6 +262,7 @@ export default function Items() {
           <Horizontal />
         </div>
       </div>
+      <div></div>
     </div>
   );
 }

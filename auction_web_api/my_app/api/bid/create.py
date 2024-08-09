@@ -1,14 +1,14 @@
 from django.http.response import JsonResponse
 from rest_framework.request import Request
 from rest_framework import status
-from ...models.item import Item
-from ...serializers.item import ItemSerializer
+from ...models.bid import Bid
+from ...serializers.bid import BidSerializer
 
 
 import json
 
 
-def create_item_handler(request: Request):
+def create_bid_handler(request: Request):
     try:
         payload = request.body
 
@@ -16,11 +16,13 @@ def create_item_handler(request: Request):
             return JsonResponse(
                 {"message": "No data provided"}, status=status.HTTP_400_BAD_REQUEST
             )
-        item_data = json.loads(payload.decode("utf-8"))
-        serializer = ItemSerializer(data=item_data)
+        
+        bid_data = json.loads(payload.decode("utf-8"))
+        serializer = BidSerializer(data=bid_data)
 
         if serializer.is_valid():
-            item = serializer.save()
+            bid = serializer.save()
+
             return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
         else:
             error_messages = serializer.errors

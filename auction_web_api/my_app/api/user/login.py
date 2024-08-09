@@ -18,7 +18,6 @@ def login_handler(request: Request):
 
     username = request.data['username']
     password = request.data['password']
-    print(username,password)
     User = get_user_model()
 
     user = User.objects.filter(username=username).first()
@@ -35,6 +34,7 @@ def login_handler(request: Request):
     
     payload = {
         'id':user.id,
+        'isAdmin':user.is_admin,
         'exp':datetime.datetime.now(datetime.UTC) + datetime.timedelta(hours=20),
         'iat':datetime.datetime.now(datetime.UTC)
     }
@@ -50,12 +50,11 @@ def login_handler(request: Request):
 
 def get_user_handler(request: Request):
     token = request.COOKIES.get('jwt')
-
     if not token:
         raise AuthenticationFailed('Unauthenticated!')
 
     try:
-        payload = jwt.decode(token, 'secret', algorithm=['HS256'])
+        payload = jwt.decode(token, 'secret', algorithms=['HS256'])
     except jwt.ExpiredSignatureError:
         raise AuthenticationFailed('Unauthenticated!')
     

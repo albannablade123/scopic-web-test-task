@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 export default function ItemAction(props: any) {
-  const itemService = new ItemService('http://localhost:8000/api');
+  const itemService = new ItemService("http://localhost:8000/api");
 
   const [showConfirm, setShowConfirm] = useState(false);
   const router = useRouter();
@@ -37,9 +37,20 @@ export default function ItemAction(props: any) {
   return (
     <div className="relative flex items-center gap-2">
       <Tooltip content="Details">
-        <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-          <EyeIcon />
-        </span>
+        <Link
+          href={{
+            pathname: `/admin/detail/${props.id}`,
+            query: {
+              search: "search",
+              itemDetail: props.item,
+              id: props.id,
+            },
+          }}
+        >
+          <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
+            <EyeIcon />
+          </span>
+        </Link>
       </Tooltip>
       <Tooltip content="Edit user">
         <Link
@@ -48,7 +59,7 @@ export default function ItemAction(props: any) {
             query: {
               search: "search",
               itemDetail: props.item,
-              id: props.id
+              id: props.id,
             },
           }}
         >
