@@ -35,8 +35,8 @@ def login_handler(request: Request):
     payload = {
         'id':user.id,
         'isAdmin':user.is_admin,
-        'exp':datetime.datetime.now(datetime.UTC) + datetime.timedelta(hours=20),
-        'iat':datetime.datetime.now(datetime.UTC)
+        'exp':datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=20),
+        'iat':datetime.datetime.now(datetime.timezone.utc)
     }
     token = jwt.encode(payload, 'secret', algorithm='HS256')
     response = Response()

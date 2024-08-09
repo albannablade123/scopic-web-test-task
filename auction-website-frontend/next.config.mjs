@@ -15,8 +15,15 @@ const nextConfig = {
         ]
     },
     images: {
-        domains: ['placehold.co','img-9gag-fun.9cache.com','h5p.org',"i.ebayimg.com"]
-    }
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: '**',
+                port: '',
+                pathname: '**',
+            },
+        ],
+    },
 };
 
 export default nextConfig;
