@@ -11,24 +11,38 @@ const Login = () => {
   const submit = async (e: SyntheticEvent) => {
     e.preventDefault();
 
-    await fetch("http://localhost:8000/api/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify({
-        username,
-        password,
-      }),
-    });
+    try {
+      const response = await fetch("http://localhost:8000/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          username,
+          password,
+        }),
+      });
 
-    await router.push("/products");
+      if (!response.ok) {
+        // Handle HTTP errors
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Login failed");
+      }
+
+      // Redirect to products page if login is successful
+      await router.push("/products");
+    } catch (error) {
+      // Handle network or other errors
+      console.error("Login error:", error);
+      // Optionally display an error message to the user
+      alert("Login failed. Please check your credentials and try again.");
+    }
   };
   return (
     <div className={styles.container}>
       <form onSubmit={submit} className={styles.signin}>
-        <h1 className="h3 mb-5 mt-3 fw-normal text-center">Please sign in</h1>
+        <h1 className="h3 mb-5 mt-3 fw-normal text-large font-semibold text-center">Sign In</h1>
         <div className="form-floating mb-3">
           <label htmlFor="username" className={styles.formLabel}>
             Username
@@ -36,20 +50,20 @@ const Login = () => {
           <input
             type="text"
             id="username"
-            className="form-control"
+            className="form-control p-2"
             placeholder="Username"
             required
             onChange={(e) => setUsername(e.target.value)}
           />
         </div>
-        <div className="form-floating mb-3">
+        <div className="form-floating mb-6">
           <label htmlFor="password" className={styles.formLabel}>
             Password
           </label>
           <input
             type="password"
             id="password"
-            className="form-control"
+            className="form-control p-2"
             placeholder="Password"
             required
             onChange={(e) => setPassword(e.target.value)}
