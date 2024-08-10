@@ -13,7 +13,7 @@ import { columns, Item, renderCell } from "../admin/column";
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { Input, Pagination } from "@nextui-org/react";
 import { SearchIcon } from "./icons";
-import { ItemService } from "../lib/actions/ItemService";
+import { ItemService } from "../utils/actions/ItemService";
 
 
 
@@ -24,13 +24,13 @@ export default function ItemTable() {
   const [convertedItems, setConvertedItems] = useState<Item[]>([]);
 
 
+  const fetchItems = async () => {
+    const fetchedItems = await itemService.getAllItemActions();
+    console.log('Fetched fetchedItems:', fetchedItems); // Print fetchedItems to the console
+    setConvertedItems(fetchedItems);
+  };
 
   useEffect(() => {
-    const fetchItems = async () => {
-      const fetchedItems = await itemService.getAllItemActions();
-      console.log('Fetched fetchedItems:', fetchedItems); // Print fetchedItems to the console
-      setConvertedItems(fetchedItems);
-    };
     fetchItems();
   }, []);
 
@@ -136,7 +136,7 @@ export default function ItemTable() {
         {(item) => (
           <TableRow key={item.key}>
             {(columnKey) => (
-              <TableCell className="max-w-xs truncate">{renderCell(item, columnKey)}</TableCell>
+              <TableCell className="max-w-xs truncate">{renderCell(item, columnKey, fetchItems)}</TableCell>
             )}
           </TableRow>
         )}

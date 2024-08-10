@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { parse } from "path";
-import { ItemService } from "@/app/lib/actions/ItemService";
+import { ItemService } from "@/app/utils/actions/ItemService";
 
 export default function CreateItem(props: any) {
   const itemService = new ItemService('http://localhost:8000/api');

@@ -1,7 +1,7 @@
 import { Tooltip } from "@nextui-org/react";
 import { EyeIcon, EditIcon, DeleteIcon } from "./icons";
 import { FormEvent, MouseEventHandler, useState } from "react";
-import { ItemService } from "../lib/actions/ItemService";
+import { ItemService } from "../utils/actions/ItemService";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -23,7 +23,7 @@ export default function ItemAction(props: any) {
     if (response == 204) {
       // Redirect or show success message
       setShowConfirm(false);
-      router.push("/admin/products");
+      props.fetchItems()
     } else {
       // Handle error
       console.error("Failed to create item");
@@ -81,7 +81,7 @@ export default function ItemAction(props: any) {
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-4 rounded-md shadow-lg">
             <h2 className="text-lg font-bold mb-2">Confirm Delete</h2>
-            <p className="mb-4">Are you sure you want to delete this user?</p>
+            <p className="mb-4">Are you sure you want to delete this item?</p>
             <div className="flex justify-end gap-2">
               <button
                 onClick={handleConfirmDelete}

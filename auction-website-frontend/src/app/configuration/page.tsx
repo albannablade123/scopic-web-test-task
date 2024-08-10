@@ -49,6 +49,7 @@ const AutoBidConfig = () => {
 
     if (alertPercentage > 100) {
       setError("Alert percentage cannot be more than 100.");
+      alert("Alert percentage cannot be more than 100.")
       return;
     }
     const config = {

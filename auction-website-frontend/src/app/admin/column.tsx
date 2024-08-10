@@ -13,12 +13,12 @@ import {DeleteIcon} from "../components/icons";
 import {EyeIcon} from "../components/icons";
 import ItemAction from '../components/itemAction'
 
-export const renderCell = (item: Item, columnKey: React.Key) => {
+export const renderCell = (item: Item, columnKey: React.Key, fetchItems: Function ) => {
     const cellValue = item[columnKey as keyof Item]
 
     switch (columnKey) {
       case "actions":
-        return <ItemAction id={item.id}/>;
+        return <ItemAction id={item.id} fetchItems={fetchItems}/>;
       default:
         return cellValue;
     }

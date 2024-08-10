@@ -1,6 +1,6 @@
 "use client";
 import CountdownTimer from "@/app/components/countdownTimer";
-import { ItemService } from "@/app/lib/actions/ItemService";
+import { ItemService } from "@/app/utils/actions/ItemService";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Image from "next/image";
@@ -75,14 +75,13 @@ export default function Items() {
           );
 
           setHighestBid({
-            "amount" : bid.amount,
-            "userId": bid.user
+            amount: bid.amount,
+            userId: bid.user,
           });
         } else {
-          
           setHighestBid({
-            "amount" : itemDetail.starting_price,
-            "userId": null
+            amount: itemDetail.starting_price,
+            userId: null,
           });
         }
       } catch (error) {
@@ -95,7 +94,7 @@ export default function Items() {
       try {
         const itemDetail = (await itemService.getItemById(itemId)) as Item;
         setItemDetail(itemDetail);
-        console.log(itemDetail.image_large, "____________________")
+        console.log(itemDetail.image_large, "____________________");
       } catch (error) {
         setError("Failed to fetch item details");
         console.error("Error fetching item:", error);
@@ -255,8 +254,7 @@ export default function Items() {
 
       if (response.ok) {
         alert("Bid placed successfully!");
-        setHighestBid(Number(amount))
-        // Optionally reset the amount
+        setHighestBid({ amount: Number(amount), userId: userId });
         setAmount("");
       } else {
         const errorData = await response.json();

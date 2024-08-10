@@ -1,6 +1,6 @@
 "use client";
 import CountdownTimer from "@/app/components/countdownTimer";
-import { ItemService } from "@/app/lib/actions/ItemService";
+import { ItemService } from "@/app/utils/actions/ItemService";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Image from "next/image";

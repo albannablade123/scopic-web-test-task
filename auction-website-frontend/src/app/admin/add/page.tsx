@@ -1,6 +1,6 @@
 "use client";
-import { createItem } from "@/app/lib/actions/items";
-import { ItemService } from "@/app/lib/actions/ItemService";
+import { createItem } from "@/app/utils/actions/items";
+import { ItemService } from "@/app/utils/actions/ItemService";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useState } from "react";
 
@@ -21,7 +21,7 @@ export default function CreateItem() {
     const start = new Date(startTime);
     const expiry = new Date(expiryTime);
   
-    if (start <= now) {
+    if (start < now) {
       return "Start time must be after the current time.";
     }
   

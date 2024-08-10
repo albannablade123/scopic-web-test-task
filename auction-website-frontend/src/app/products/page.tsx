@@ -2,7 +2,7 @@
 import Image from "next/image";
 import imagePlaceHolder from "../images.png";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { ItemService } from "../lib/actions/ItemService";
+import { ItemService } from "../utils/actions/ItemService";
 import { Input, Pagination } from "@nextui-org/react";
 import Link from "next/link";
 import { SearchIcon } from "../components/icons";
@@ -90,15 +90,17 @@ export default function Home() {
   });
 
   const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value as SortColumn;
+    const value = e.target.value as string;
 
-    console.log(sortDescriptor);
-
-    // Update state with the new sort column and default to ascending direction
-    setSortDescriptor({
+    // Toggle direction if the column is the same
+    setSortDescriptor((prevDescriptor) => ({
       column: value,
-      direction: "ascending", // Default to ascending; you might want to toggle direction here
-    });
+      direction: prevDescriptor.column === value
+        ? prevDescriptor.direction === "ascending"
+          ? "descending"
+          : "ascending"
+        : "ascending",
+    }));
   };
 
   const sortedItems = useMemo(() => {
@@ -176,6 +178,28 @@ export default function Home() {
             onClear={() => onClear()}
             onValueChange={onSearchChange}
           />
+          <div className="mb-4">
+            <label
+              htmlFor="sort"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Order:
+            </label>
+            <select
+              id="sort"
+              className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              value={sortDescriptor.column}
+              onChange={(e) => {
+                setSortDescriptor((prevDescriptor) => ({
+                  ...prevDescriptor,
+                  direction: e.target.value as "ascending" | "descending",
+                }));
+              }}
+            >
+              <option value="ascending">Ascending</option>
+              <option value="descending">Descending</option>
+            </select>
+          </div>
           <div className="mb-4">
             <label
               htmlFor="sort"
