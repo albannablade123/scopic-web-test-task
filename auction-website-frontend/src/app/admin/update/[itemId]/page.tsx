@@ -27,8 +27,6 @@ export default function CreateItem(props: any) {
     const fetchItemDetail = async (itemId: number) => {
       try {
         const itemDetail = await itemService.getItemById(itemId);
-        console.log("______________________________________")
-        console.log("Fetched products:", itemDetail); // Print products to the console
         setFormData({
           name: itemDetail.name,
           starting_price: itemDetail.starting_price,
@@ -60,6 +58,7 @@ export default function CreateItem(props: any) {
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
+
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -68,16 +67,28 @@ export default function CreateItem(props: any) {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-  
+    
     setError(null); // Reset any previous errors
     setLoading(true); // Set loading state to true
-  
+    const local_start_time = new Date(formData.start_time);
+    const local_expiry_time = new Date(formData.expiry_time);
+
+
+    const update_start_time = local_start_time.toISOString()
+    const update_expiry_time = local_expiry_time.toISOString()
+
+    const newFormData = {
+      ...formData,
+      "start_time": update_start_time,
+      "expiry_time" : update_expiry_time,
+    }
+    
     try {
       if (itemId) {
         const parsedId = Number(itemId);
   
         if (!isNaN(parsedId)) {
-          const response = await itemService.updateItem(formData, parsedId);
+          const response = await itemService.updateItem(newFormData, parsedId);
   
           if (response) {
             // Redirect or show success message

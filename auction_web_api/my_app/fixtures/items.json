@@ -1,0 +1,211 @@
+[
+    {
+      "model": "my_app.Item",
+      "pk": 1,
+      "fields": {
+        "name": "Vintage Lamp",
+        "description": "A rare vintage lamp from the 1950s.",
+        "expiry_time": "2024-11-30T23:59:59Z",
+        "start_time": "2024-09-01T12:00:00Z",
+        "starting_price": "250"
+      }
+    },
+    {
+      "model": "my_app.Item",
+      "pk": 2,
+      "fields": {
+        "name": "Antique Clock",
+        "description": "A beautiful antique clock with intricate details.",
+        "expiry_time": "2024-10-15T18:00:00Z",
+        "start_time": "2024-09-10T10:00:00Z",
+        "starting_price": "750"
+      }
+    },
+    {
+      "model": "my_app.Item",
+      "pk": 3,
+      "fields": {
+        "name": "Classic Vinyl Record",
+        "description": "An original pressing of a classic album.",
+        "expiry_time": "2024-12-01T20:00:00Z",
+        "start_time": "2024-08-31T15:30:00Z",
+        "starting_price": "120"
+      }
+    },
+    {
+      "model": "my_app.Item",
+      "pk": 4,
+      "fields": {
+        "name": "Rare Book Collection",
+        "description": "A collection of rare books in excellent condition.",
+        "expiry_time": "2024-12-25T17:00:00Z",
+        "start_time": "2024-09-05T09:00:00Z",
+        "starting_price": "900"
+      }
+    },
+    {
+      "model": "my_app.Item",
+      "pk": 5,
+      "fields": {
+        "name": "Antique Vase",
+        "description": "A delicate antique vase from the Ming dynasty.",
+        "expiry_time": "2024-10-31T19:00:00Z",
+        "start_time": "2024-09-15T11:00:00Z",
+        "starting_price": "400"
+      }
+    },
+    {
+      "model": "my_app.Item",
+      "pk": 6,
+      "fields": {
+        "name": "Classic Guitar",
+        "description": "A classic guitar used by a famous musician.",
+        "expiry_time": "2024-11-05T21:30:00Z",
+        "start_time": "2024-09-20T16:00:00Z",
+        "starting_price": "1250"
+      }
+    },
+    {
+      "model": "my_app.Item",
+      "pk": 7,
+      "fields": {
+        "name": "Old Map",
+        "description": "An old map of a long-lost treasure island.",
+        "expiry_time": "2024-12-10T22:00:00Z",
+        "start_time": "2024-09-25T13:30:00Z",
+        "starting_price": "600"
+      }
+    },
+    {
+      "model": "my_app.Item",
+      "pk": 8,
+      "fields": {
+        "name": "Vintage Camera",
+        "description": "A vintage camera in perfect working condition.",
+        "expiry_time": "2024-12-15T19:45:00Z",
+        "start_time": "2024-10-01T14:00:00Z",
+        "starting_price": "300"
+      }
+    },
+    {
+      "model": "my_app.Item",
+      "pk": 9,
+      "fields": {
+        "name": "Antique Mirror",
+        "description": "An antique mirror with an ornate gold frame.",
+        "expiry_time": "2024-11-20T23:00:00Z",
+        "start_time": "2024-10-05T10:30:00Z",
+        "starting_price": "500"
+      }
+    },
+    {
+      "model": "my_app.Item",
+      "pk": 10,
+      "fields": {
+        "name": "Old Coins",
+        "description": "A collection of old coins from various eras.",
+        "expiry_time": "2024-12-20T20:15:00Z",
+        "start_time": "2024-10-10T12:45:00Z",
+        "starting_price": "200"
+      }
+    },
+    {
+      "model": "my_app.Item",
+      "pk": 11,
+      "fields": {
+        "name": "Rare Painting",
+        "description": "A rare painting by a famous artist.",
+        "expiry_time": "2024-12-25T22:30:00Z",
+        "start_time": "2024-10-15T09:15:00Z",
+        "starting_price": "1500"
+      }
+    },
+    {
+      "model": "my_app.Item",
+      "pk": 12,
+      "fields": {
+        "name": "Vintage Watch",
+        "description": "A vintage watch in excellent working condition.",
+        "expiry_time": "2024-12-30T18:00:00Z",
+        "start_time": "2024-10-20T11:45:00Z",
+        "starting_price": "800"
+      }
+    },
+    {
+      "model": "my_app.Item",
+      "pk": 13,
+      "fields": {
+        "name": "Antique Jewelry Box",
+        "description": "An antique jewelry box with intricate carvings.",
+        "expiry_time": "2024-12-05T17:30:00Z",
+        "start_time": "2024-10-25T10:00:00Z",
+        "starting_price": "1000"
+      }
+    },
+    {
+      "model": "my_app.Item",
+      "pk": 14,
+      "fields": {
+        "name": "Old Manuscript",
+        "description": "An old manuscript from the medieval period.",
+        "expiry_time": "2024-11-10T21:00:00Z",
+        "start_time": "2024-11-01T13:00:00Z",
+        "starting_price": "500"
+      }
+    },
+    {
+      "model": "my_app.Item",
+      "pk": 15,
+      "fields": {
+        "name": "Rare Stamp Collection",
+        "description": "A collection of rare stamps from around the world.",
+        "expiry_time": "2024-11-15T18:30:00Z",
+        "start_time": "2024-11-05T14:30:00Z",
+        "starting_price": "450"
+      }
+    },
+    {
+      "model": "my_app.Item",
+      "pk": 16,
+      "fields": {
+        "name": "Antique Furniture Set",
+        "description": "An antique furniture set in great condition.",
+        "expiry_time": "2024-12-01T20:00:00Z",
+        "start_time": "2024-11-10T16:00:00Z",
+        "starting_price": "2000"
+      }
+    },
+    {
+      "model": "my_app.Item",
+      "pk": 17,
+      "fields": {
+        "name": "Classic Car Model",
+        "description": "A classic car model in mint condition.",
+        "expiry_time": "2024-12-10T22:00:00Z",
+        "start_time": "2024-11-15T12:00:00Z",
+        "starting_price": "3000"
+      }
+    },
+    {
+      "model": "my_app.Item",
+      "pk": 18,
+      "fields": {
+        "name": "Old Newspaper Collection",
+        "description": "A collection of old newspapers with historical events.",
+        "expiry_time": "2024-12-20T21:15:00Z",
+        "start_time": "2024-11-20T14:15:00Z",
+        "starting_price": "350"
+      }
+    },
+    {
+      "model": "my_app.Item",
+      "pk": 19,
+      "fields": {
+        "name": "Vintage Typewriter",
+        "description": "A vintage typewriter in working condition.",
+        "expiry_time": "2024-12-31T23:59:59Z",
+        "start_time": "2024-11-25T15:30:00Z",
+        "starting_price": "700"
+      }
+    }
+  ]

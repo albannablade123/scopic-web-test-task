@@ -11,7 +11,6 @@ import json
 def create_autobid_config(request: Request):
     try:
         payload = request.body
-        print(payload)
         if not payload:
             return JsonResponse(
                 {"message": "No data provided"}, status=status.HTTP_400_BAD_REQUEST
@@ -19,7 +18,6 @@ def create_autobid_config(request: Request):
 
         config_data = json.loads(payload.decode("utf-8"))
         user_id = config_data.get("user")
-        print(user_id)
         if not user_id:
             return JsonResponse(
                 {"message": "User ID is required"}, status=status.HTTP_400_BAD_REQUEST
@@ -27,19 +25,16 @@ def create_autobid_config(request: Request):
 
         # Check if a config already exists for this user
         existing_config = AutobidConfig.objects.filter(user_id=user_id).first()
-        print(config_data)
         if existing_config:
             return JsonResponse(
                 {"message": "Auto-bid configuration for this user already exists."},
                 status=status.HTTP_400_BAD_REQUEST
             )
         
-        print("CHECKPOINT-1")
 
         # If no existing config, proceed to create a new one
         serializer = AutobidConfigSerializer(data=config_data)
 
-        print("CHECKPOINT-2")
 
 
         if serializer.is_valid():

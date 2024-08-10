@@ -10,14 +10,12 @@ export class NotificationService {
 
     
         try {
-            console.log(url)
           const response = await fetch(url, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
             },
           });
-          console.log(response)
           const result = await response.json();
           return result;
         } catch (error) {

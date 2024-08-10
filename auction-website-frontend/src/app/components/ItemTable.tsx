@@ -48,7 +48,7 @@ export default function ItemTable() {
   }, [convertedItems, filterValue, hasSearchFilter]);
 
   const [page, setPage] = useState(1);
-  const rowsPerPage = 3;
+  const rowsPerPage = 10;
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -114,7 +114,7 @@ export default function ItemTable() {
       bottomContent={
         <div className="flex w-full justify-center">
           <Pagination
-            isCompact
+  
             showControls
             showShadow
             color="secondary"

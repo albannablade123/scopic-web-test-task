@@ -75,7 +75,6 @@ const AutoBidConfig = () => {
 
         const result = await updateResponse.json();
         alert("auto-bid configuration updated succesfully")
-        console.log("Auto-bid configuration updated:", result);
       } else {
         // Create new configuration
         const createResponse = await fetch(`http://localhost:8000/api/config`, {

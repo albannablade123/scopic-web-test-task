@@ -30,7 +30,6 @@ const Navbar = () => {
       } catch (e) {
         setAuth(false);
       }
-      console.log(auth);
     })();
   });
 
@@ -57,7 +56,6 @@ const Navbar = () => {
   }, [auth, userId]);
 
   const toggleDropdown = () => {
-    console.log("REACHED EHRE");
     setIsDropdownOpen(!isDropdownOpen);
   };
 
@@ -85,14 +83,14 @@ const Navbar = () => {
               Antique Auction
             </a>
             <a
-              href="/products"
-              className="text-white hover:bg-white hover: text-black rounded-lg p-2 ml-3"
+              href="/homepage"
+              className="text-white hover:bg-slate-800 hover: text-black rounded-lg p-2 ml-3"
             >
               Item List
             </a>
 
             <Link
-              className="text-white hover:bg-white hover: text-black rounded-lg p-2 ml-3"
+              className="text-white hover:bg-slate-800 hover: text-black rounded-lg p-2 ml-3"
               href={{
                 pathname: "/configuration",
                 query: {
@@ -106,7 +104,7 @@ const Navbar = () => {
             {isAdmin && (
               <a
                 href="/admin/products"
-                className="text-white hover:bg-white hover: text-black rounded-lg p-2 ml-3"
+                className="text-white hover:bg-slate-800 hover: text-black rounded-lg p-2 ml-3"
               >
                 Admin Dashboard
               </a>

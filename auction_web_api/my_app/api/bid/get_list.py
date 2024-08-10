@@ -38,7 +38,6 @@ def get_bid_list_handler(request: Request):
             bids_page = paginator.page(paginator.num_pages)
 
         serializer = BidSerializer(bids, many=True)
-        print(serializer.data)
     
         return JsonResponse({
             'total_bids': paginator.count,

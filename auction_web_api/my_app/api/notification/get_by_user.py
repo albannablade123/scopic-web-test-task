@@ -35,7 +35,6 @@ def get_notification_list_handler(request: Request):
             notifications_page = paginator.page(paginator.num_pages)
 
         serializer = NotificationSerializer(notifications, many=True)
-        print(serializer.data)
     
         return JsonResponse({
             'total_notifications': paginator.count,

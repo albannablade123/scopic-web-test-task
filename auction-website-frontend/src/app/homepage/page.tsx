@@ -66,21 +66,6 @@ export default function Home() {
     }
   }, [items, filterValue, hasSearchFilter]);
 
-  const [page, setPage] = useState(1);
-  const rowsPerPage = 10;
-
-  const pages = Math.ceil(filteredItems.length / rowsPerPage);
-  const pageItems = useMemo(() => {
-    const start = (page - 1) * rowsPerPage;
-    const end = start + rowsPerPage;
-
-    if (items != null) {
-      return filteredItems.slice(start, end);
-    } else {
-      return [];
-    }
-  }, [page, filteredItems]);
-
   const [sortDescriptor, setSortDescriptor] = useState({
     column: "name",
     direction: "ascending",
@@ -90,7 +75,6 @@ export default function Home() {
     const value = e.target.value as string;
 
     // Toggle direction if the column is the same
-    console.log("CHECKPOINT-1")
     setSortDescriptor((prevDescriptor) => ({
       column: value,
       direction:
@@ -102,22 +86,26 @@ export default function Home() {
     }));
   };
 
+
   const handleColumnChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const column = e.target.value;
-    
+    const direction = e.target.value as string;
+    console.log("COLUMN CHANGED!")
+
     // Update the column while keeping the current direction
-    setSortDescriptor(prevDescriptor => ({
+    setSortDescriptor((prevDescriptor) => ({
       ...prevDescriptor,
-      column: column,
+      direction: direction,
     }));
   };
 
+
+
   const sortedItems = useMemo(() => {
-    if (pageItems == null) {
+    if (filteredItems == null) {
       return [];
     }
     if (sortDescriptor.column) {
-      return [...pageItems].sort((a: Item, b: Item) => {
+      return [...filteredItems].sort((a: Item, b: Item) => {
         let firstValue: string | number | Date;
         let secondValue: string | number | Date;
         switch (sortDescriptor.column) {
@@ -151,12 +139,27 @@ export default function Home() {
         } else {
           cmp = 0; // Default comparison if types are not as expected
         }
-        console.log(sortDescriptor.direction)
+        console.log(sortDescriptor.direction);
         return sortDescriptor.direction === "descending" ? -cmp : cmp;
       });
     }
     return pageItems;
-  }, [sortDescriptor, pageItems]);
+  }, [sortDescriptor, filteredItems]);
+
+  const [page, setPage] = useState(1);
+  const rowsPerPage = 10;
+
+  const pages = Math.ceil(sortedItems.length / rowsPerPage);
+  const pageItems = useMemo(() => {
+    const start = (page - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+
+    if (items != null) {
+      return sortedItems.slice(start, end);
+    } else {
+      return [];
+    }
+  }, [page, sortedItems]);
 
   const onClear = useCallback(() => {
     setFilterValue("");
@@ -197,7 +200,7 @@ export default function Home() {
             <select
               id="sort"
               className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              value={sortDescriptor.column}
+              value={sortDescriptor.direction}
               onChange={handleColumnChange}
             >
               <option value="ascending">Ascending</option>
@@ -227,12 +230,22 @@ export default function Home() {
           {sortedItems.length === 0 ? (
             <div>No items available</div>
           ) : (
-            sortedItems.map((item) => <ItemCard key={item.id} item={item} />)
+            pageItems.map((item) => <ItemCard key={item.id} item={item} />)
           )}
         </div>
+        <div className="flex mt-10">
+          <div className="justify-center">
+            <Pagination
+              showControls
+              showShadow
+              color="secondary"
+              page={page}
+              total={pages}
+              onChange={(page) => setPage(page)}
+            />
+          </div>
+        </div>
       </div>
-
-      <Pagination total={pages} initialPage={1} />
     </div>
   );
 }
@@ -246,11 +259,11 @@ const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
   const expiryDate = new Date(item.expiry_time);
   const formattedExpiryDate = expiryDate.toLocaleString();
   return (
-    <a className="shadow-sm p-3">
+    <div className="shadow-sm p-3">
       <div className="aspect-w-1 aspect-h-2 bg-red-200 w-full rounded-lg overflow-hidden xl:aspect-w-7 xl:aspect-h-9 ">
         <Image
           alt=""
-          src={'/images.png'}
+          src={item?.image_large || "/images.png"}
           width={500}
           height={500}
           objectFit="cover"
@@ -283,6 +296,6 @@ const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
           </Link>
         </button>
       </div>
-    </a>
+    </div>
   );
 };

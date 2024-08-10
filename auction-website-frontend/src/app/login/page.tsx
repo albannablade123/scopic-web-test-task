@@ -31,7 +31,7 @@ const Login = () => {
       }
 
       // Redirect to products page if login is successful
-      await router.push("/products");
+      await router.push("/homepage");
     } catch (error) {
       // Handle network or other errors
       console.error("Login error:", error);

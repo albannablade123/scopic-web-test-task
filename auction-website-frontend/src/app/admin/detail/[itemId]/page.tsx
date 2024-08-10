@@ -4,7 +4,6 @@ import { ItemService } from "@/app/utils/actions/ItemService";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import imagePlaceHolder from "../../../images.png";
 
 const Horizontal = () => {
   return <hr className="w-[30% my-2]" />;
@@ -56,8 +55,6 @@ export default function Items() {
 
       if (content.id) {
         // User is authenticated and logged out
-        console.log(content);
-        console.log(content.id);
         setUserId(content.id);
       }
     };
@@ -76,8 +73,7 @@ export default function Items() {
 
     const fetchBids = async (itemId: number) => {
       try {
-        const bids = await itemService.getAllBidsByItemId(itemId);
-        console.log("Fetched bids:", bids);
+        const bids = await itemService.getAllBidsByItemId(itemId,10,10);
         setBids(bids);
       } catch (error) {
         setError("Failed to fetch item details");
@@ -110,7 +106,6 @@ export default function Items() {
       alert("Please enter a bid amount.");
       return;
     }
-    console.log(userId);
     try {
       const response = await fetch("http://127.0.0.1:8000/api/bid", {
         method: "POST",
@@ -151,13 +146,12 @@ export default function Items() {
     <div className="grid grid-cols-1 md:grid-cols-2 gap-12  p-6 mt-10 px-10 mx-10">
       <div>
         <Image
-          alt={imagePlaceHolder}
-          src={itemDetail?.image_large}
+          src={itemDetail?.image_large || '/images.png'}
           width={500}
           height={500}
           objectFit="cover"
           className={cn(
-            "group-hover:opacity-75 duration-700 ease-in-out",
+            "w-full object-contain group-hover:opacity-75 duration-700 ease-in-out",
             loading
               ? "greyscale blur-2xl scale-110"
               : "greyscale-0 blue-0 scale 100"
