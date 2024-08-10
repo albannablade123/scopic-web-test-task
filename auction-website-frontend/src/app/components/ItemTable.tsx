@@ -77,7 +77,6 @@ export default function ItemTable() {
     console.log("Test");
     if (value) {
       setFilterValue(value);
-      console.log(value);
 
       setPage(1);
     } else {

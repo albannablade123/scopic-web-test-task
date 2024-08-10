@@ -1,6 +1,5 @@
 "use client";
 import Image from "next/image";
-import imagePlaceHolder from "../images.png";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ItemService } from "../utils/actions/ItemService";
 import { Input, Pagination } from "@nextui-org/react";
@@ -56,11 +55,10 @@ export default function Home() {
       if (hasSearchFilter) {
         filteredListings = filteredListings.filter(
           (item) =>
-            item.name.toLowerCase().includes(filterValue.toLowerCase()) ||
+            item.name.toLowerCase().includes(filterValue) ||
             item.description.toLowerCase().includes(filterValue.toLowerCase())
         );
       }
-
       return filteredListings;
     } else {
       console.error("items is not iterable");
@@ -72,13 +70,12 @@ export default function Home() {
   const rowsPerPage = 10;
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
-
   const pageItems = useMemo(() => {
     const start = (page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
 
     if (items != null) {
-      return items.slice(start, end);
+      return filteredItems.slice(start, end);
     } else {
       return [];
     }
@@ -93,13 +90,25 @@ export default function Home() {
     const value = e.target.value as string;
 
     // Toggle direction if the column is the same
+    console.log("CHECKPOINT-1")
     setSortDescriptor((prevDescriptor) => ({
       column: value,
-      direction: prevDescriptor.column === value
-        ? prevDescriptor.direction === "ascending"
-          ? "descending"
-          : "ascending"
-        : "ascending",
+      direction:
+        prevDescriptor.column === value
+          ? prevDescriptor.direction === "ascending"
+            ? "descending"
+            : "ascending"
+          : "ascending",
+    }));
+  };
+
+  const handleColumnChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const column = e.target.value;
+    
+    // Update the column while keeping the current direction
+    setSortDescriptor(prevDescriptor => ({
+      ...prevDescriptor,
+      column: column,
     }));
   };
 
@@ -142,7 +151,7 @@ export default function Home() {
         } else {
           cmp = 0; // Default comparison if types are not as expected
         }
-
+        console.log(sortDescriptor.direction)
         return sortDescriptor.direction === "descending" ? -cmp : cmp;
       });
     }
@@ -189,12 +198,7 @@ export default function Home() {
               id="sort"
               className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               value={sortDescriptor.column}
-              onChange={(e) => {
-                setSortDescriptor((prevDescriptor) => ({
-                  ...prevDescriptor,
-                  direction: e.target.value as "ascending" | "descending",
-                }));
-              }}
+              onChange={handleColumnChange}
             >
               <option value="ascending">Ascending</option>
               <option value="descending">Descending</option>
@@ -246,7 +250,7 @@ const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
       <div className="aspect-w-1 aspect-h-2 bg-red-200 w-full rounded-lg overflow-hidden xl:aspect-w-7 xl:aspect-h-9 ">
         <Image
           alt=""
-          src={imagePlaceHolder}
+          src={'/images.png'}
           width={500}
           height={500}
           objectFit="cover"

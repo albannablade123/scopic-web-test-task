@@ -4,7 +4,6 @@ import { ItemService } from "@/app/utils/actions/ItemService";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import imagePlaceHolder from "../../images.png";
 import BidComponent from "@/app/components/BidComponent";
 
 const Horizontal = () => {
@@ -94,7 +93,6 @@ export default function Items() {
       try {
         const itemDetail = (await itemService.getItemById(itemId)) as Item;
         setItemDetail(itemDetail);
-        console.log(itemDetail.image_large, "____________________");
       } catch (error) {
         setError("Failed to fetch item details");
         console.error("Error fetching item:", error);
@@ -270,13 +268,13 @@ export default function Items() {
     <div className="grid grid-cols-1 md:grid-cols-2 gap-12  p-6 mt-10 px-10 mx-10">
       <div>
         <Image
-          alt={imagePlaceHolder}
-          src={itemDetail.image_large || imagePlaceHolder}
+          alt=''
+          src={itemDetail.image_large || '/images.png'}
           width={500}
           height={500}
           objectFit="cover"
           className={cn(
-            "group-hover:opacity-75 duration-700 ease-in-out",
+            " w-full object-contain group-hover:opacity-75 duration-700 ease-in-out",
             loading
               ? "greyscale blur-2xl scale-110"
               : "greyscale-0 blue-0 scale 100"
