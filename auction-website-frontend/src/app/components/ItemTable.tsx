@@ -15,25 +15,21 @@ import { Input, Pagination } from "@nextui-org/react";
 import { SearchIcon } from "./icons";
 import { ItemService } from "../utils/actions/ItemService";
 
-
-
 export default function ItemTable() {
-  const itemService = new ItemService('http://localhost:8000/api');
+  const itemService = new ItemService("http://localhost:8000/api");
   const [filterValue, setFilterValue] = useState("");
   const hasSearchFilter = Boolean(filterValue);
   const [convertedItems, setConvertedItems] = useState<Item[]>([]);
 
-
   const fetchItems = async () => {
     const fetchedItems = await itemService.getAllItemActions();
-    console.log('Fetched fetchedItems:', fetchedItems); // Print fetchedItems to the console
+    console.log("Fetched fetchedItems:", fetchedItems); // Print fetchedItems to the console
     setConvertedItems(fetchedItems);
   };
 
   useEffect(() => {
     fetchItems();
   }, []);
-
 
   const filteredItems = useMemo(() => {
     let filteredListings = [...convertedItems];
@@ -74,7 +70,6 @@ export default function ItemTable() {
     });
   }, [sortDescriptor, pageItems]);
   const onSearchChange = useCallback((value?: string) => {
-    console.log("Test");
     if (value) {
       setFilterValue(value);
 
@@ -114,7 +109,6 @@ export default function ItemTable() {
       bottomContent={
         <div className="flex w-full justify-center">
           <Pagination
-  
             showControls
             showShadow
             color="secondary"
@@ -135,7 +129,9 @@ export default function ItemTable() {
         {(item) => (
           <TableRow key={item.key}>
             {(columnKey) => (
-              <TableCell className="max-w-xs truncate">{renderCell(item, columnKey, fetchItems)}</TableCell>
+              <TableCell className="max-w-xs truncate">
+                {renderCell(item, columnKey, fetchItems)}
+              </TableCell>
             )}
           </TableRow>
         )}

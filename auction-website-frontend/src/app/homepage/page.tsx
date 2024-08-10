@@ -52,10 +52,16 @@ export default function Home() {
         typeof items[Symbol.iterator] === "function")
     ) {
       let filteredListings = [...items];
+      const now = new Date(); // Current date and time
+
+      filteredListings = filteredListings.filter((item) => {
+        const expiryDate = new Date(item.expiry_time);
+        return expiryDate > now;
+      });
       if (hasSearchFilter) {
         filteredListings = filteredListings.filter(
           (item) =>
-            item.name.toLowerCase().includes(filterValue) ||
+            item.name.toLowerCase().includes(filterValue.toLowerCase()) ||
             item.description.toLowerCase().includes(filterValue.toLowerCase())
         );
       }
@@ -86,10 +92,8 @@ export default function Home() {
     }));
   };
 
-
   const handleColumnChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const direction = e.target.value as string;
-    console.log("COLUMN CHANGED!")
 
     // Update the column while keeping the current direction
     setSortDescriptor((prevDescriptor) => ({
@@ -97,8 +101,6 @@ export default function Home() {
       direction: direction,
     }));
   };
-
-
 
   const sortedItems = useMemo(() => {
     if (filteredItems == null) {
@@ -169,7 +171,6 @@ export default function Home() {
   const onSearchChange = useCallback((value?: string) => {
     if (value) {
       setFilterValue(value);
-      console.log(value);
 
       setPage(1);
     } else {

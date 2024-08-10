@@ -27,7 +27,6 @@ const AutoBidConfig = () => {
           throw new Error("Failed to fetch configuration");
         }
         const data = await response.json();
-        console.log('TEST BLUE TEST BLUE', data);
         
         setUpdateConfig(true);
         setMaxBidAmount(data.max_bid_amount || "");
