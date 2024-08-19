@@ -1,0 +1,25 @@
+version: '3.7'
+
+services:
+  nginx:
+    build: ./auction_web_api/nginx
+    volumes:
+      - static:/static
+    ports:
+      - "80:80"
+    depends_on:
+      - django_gunicorn
+
+  django_gunicorn:
+    volumes:
+      - static:/static
+    env_file:
+      - .env
+    build:
+      context: ./auction_web_api
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+
+volumes:
+  static:
