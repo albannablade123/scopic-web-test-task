@@ -21,5 +21,21 @@ services:
     ports:
       - "8000:8000"
 
+  celery:
+    container_name: celery
+    build:
+      context: ./auction_web_api
+    command: celery --app=auction_web_api worker -l DEBUG
+    image: django_celery_example_celery_worker
+    volumes:
+      - static:/static
+    env_file:
+      - .env
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:7-alpine
+
 volumes:
   static:

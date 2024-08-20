@@ -5,4 +5,7 @@ pytz==2024.1
 django-cors-headers==4.4.0
 tzdata==2024.1
 gunicorn==23.0.0
-django==5.1
+django==5.0
+celery==5.4.0
+alembic==1.13.2
+django-celery-beat==2.6.0

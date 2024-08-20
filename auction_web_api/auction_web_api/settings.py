@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+from celery.schedules import crontab
 from pathlib import Path
 import os
 
@@ -45,6 +46,8 @@ INSTALLED_APPS = [
 
     # MyApp application 
     'my_app',
+
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
@@ -159,3 +162,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 BASE_URL = 'http://localhost:8000'  # Adjust according to your environment
 AUTH_USER_MODEL = 'my_app.User'
 
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
+
+CELERY_RESULT_BACKEND = os.environ.get("CELERY_BACKED", "redis://redis:6379/0")
+
+
+CELERY_BEAT_SCHEDULE = {
+    'close-expired-auctions-every-minute': {
+        'task': 'yourapp.tasks.close_expired_auctions',
+        'schedule': crontab(minute='*/1'),  # runs every minute
+    },
+}

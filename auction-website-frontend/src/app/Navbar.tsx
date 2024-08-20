@@ -79,9 +79,19 @@ const Navbar = () => {
       <div className="flex items-center justify-between h-16">
         <div className="flex items-center">
           <div className="flex-shrink-0">
-          <a className="text-white italic font-bold">
-              Antique Auction
-            </a>
+            <a className="text-white italic font-bold">Antique Auction</a>
+            <Link
+              className="text-white hover:bg-slate-800 hover: text-black rounded-lg p-2 ml-3"
+              href={{
+                pathname: `/profile/${userId}`,
+                query: {
+                  search: "search",
+                  userId: userId,
+                },
+              }}
+            >
+              profile
+            </Link>
             <a
               href="/homepage"
               className="text-white hover:bg-slate-800 hover: text-black rounded-lg p-2 ml-3"

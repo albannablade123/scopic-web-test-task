@@ -11,7 +11,7 @@ class BidSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Bid
-        fields = ['user', 'item', 'amount', 'auto_bidding', 'timestamp']
+        fields = ['id', 'user', 'item', 'amount', 'auto_bidding', 'timestamp']
 
     def validate(self, data):
         item = data['item']
