@@ -167,9 +167,3 @@ CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
 CELERY_RESULT_BACKEND = os.environ.get("CELERY_BACKED", "redis://redis:6379/0")
 
 
-CELERY_BEAT_SCHEDULE = {
-    'close-expired-auctions-every-minute': {
-        'task': 'yourapp.tasks.close_expired_auctions',
-        'schedule': crontab(minute='*/1'),  # runs every minute
-    },
-}

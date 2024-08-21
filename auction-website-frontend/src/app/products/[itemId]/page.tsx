@@ -43,6 +43,8 @@ export default function Items() {
   const [autoBidStatus, setAutoBidStatus] = useState(false);
   const [highestBid, setHighestBid] = useState({});
   const [userId, setUserId] = useState("");
+  const [bids, setBids] = useState([]);
+
 
   const searchParams = useSearchParams();
   const itemIdString = searchParams.get("id");
@@ -69,6 +71,7 @@ export default function Items() {
         const bids = await itemService.getAllBidsByItemId(itemId, 1, 1);
         console.log("Fetched bids:", bids);
         if (bids.length > 0) {
+          setBids(bids)
           const bid = bids.reduce((acc, bid) =>
             acc.amount > bid.amount ? acc : bid
           );
@@ -264,6 +267,10 @@ export default function Items() {
     }
   };
 
+  const sortedBids = bids.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+  console.log("CCCCCCCCCCCCCCCCC", sortedBids)
+
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-12  p-6 mt-10 px-10 mx-10">
       <div>
@@ -281,6 +288,38 @@ export default function Items() {
           )}
           onLoad={() => setLoading(false)}
         />
+                <div>
+          <h2>Bid History</h2>
+          <div className="max-h-48 overflow-y-auto">
+            {bids.length === 0 ? (
+              <div className="text-center text-gray-500 p-4">
+                <p>No bids have been placed yet.</p>
+              </div>
+            ) : (
+              sortedBids.map((bid, index) => (
+                <div
+                  key={index}
+                  className="bg-white p-4 rounded-lg shadow-md mb-4"
+                >
+                  <h3 className="text-lg font-semibold text-gray-800">
+                    Amount:{" "}
+                    <span className="text-green-600">${bid.amount}</span>
+                  </h3>
+                  <div className="flex justify-between text-gray-600">
+                    <p>User ID: {bid.user}</p>
+                    <p>Created: {new Date(bid.timestamp).toLocaleString()}</p>
+                  </div>
+                  <p className="text-gray-600">
+                    Is Auto Bid:{" "}
+                    <span className="text-blue-600">
+                      {bid.auto_bidding ? "True" : "False"}
+                    </span>
+                  </p>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
       </div>
       <div className="mx-10">
         <div className="flex flex-col gap-1 text-slate-500 text-sm">

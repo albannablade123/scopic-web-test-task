@@ -53,4 +53,8 @@ export const columns = [
       key: "actions",
       label: "ACTIONS",
     },
+    {
+      key: "is_closed",
+      label: "CLOSED"
+    }
   ];

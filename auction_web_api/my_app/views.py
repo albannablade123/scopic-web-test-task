@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view
 from .api.item.create import create_item_handler
 from .api.item.delete import delete_item_handler
 from .api.item.get_list import get_item_list_handler
-from .api.item.get_by_id import get_item_by_id_handler
+from .api.item.get_by_id import get_item_by_id_handler, get_unique_items_bidded_by_user
 from .api.item.update import update_item_handler
 from .api.user.login import login_handler
 from .api.user.register import register_handler
@@ -19,6 +19,7 @@ from .api.notification.get_by_user import get_notification_list_handler
 from .api.autobid_configuration.get import get_autobid_config_list_handler
 from .api.autobid_configuration.create import create_autobid_config
 from .api.autobid_configuration.update import update_autobid_config_handler
+from .api.bill.get_bills_by_user import get_bill_list_handler
 
 from .api.autobid.autobid import update_auto_bid, toggle_auto_bid, create_or_update_auto_bid, get_auto_bid
 
@@ -110,3 +111,16 @@ def autobid(request: Request, id):
 def toggle_autobid(request: Request):
     if request.method == 'PATCH':
         return toggle_auto_bid(request)
+    
+
+@api_view(['GET'])
+def get_bills_by_user_id(request: Request, id):
+    if request.method == 'GET':
+        return get_bill_list_handler(request, id)
+    
+@api_view(['GET'])
+def get_items_by_user(request: Request, id):
+    if request.method == 'GET':
+        return get_unique_items_bidded_by_user(request, id)
+    
+

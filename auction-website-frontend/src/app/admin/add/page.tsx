@@ -20,15 +20,15 @@ export default function CreateItem() {
     const now = new Date();
     const start = new Date(startTime);
     const expiry = new Date(expiryTime);
-  
+
     if (start < now) {
       return "Start time must be after the current time.";
     }
-  
+
     if (expiry <= start) {
       return "Expiry time must be after the start time.";
     }
-  
+
     return null; // No errors
   };
 
@@ -40,16 +40,32 @@ export default function CreateItem() {
       [e.target.name]: e.target.value,
     });
   };
-  
+
+  const convertToUTC = (dateString: string): string => {
+    const localDate = new Date(dateString);
+    return localDate.toISOString(); // Converts to ISO string in UTC
+  };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const response = await itemService.createItem(formData);
-    const validationError = validateTimes(formData.start_time, formData.expiry_time);
+
+    // Convert start_time and expiry_time to UTC
+    const formDataWithUTC = {
+      ...formData,
+      start_time: convertToUTC(formData.start_time),
+      expiry_time: convertToUTC(formData.expiry_time),
+    };
+    const validationError = validateTimes(
+      formData.start_time,
+      formData.expiry_time
+    );
+
+    console.log(formDataWithUTC)
+    const response = await itemService.createItem(formDataWithUTC);
 
     if (validationError) {
       // Show validation error to the user
-      alert(validationError)
+      alert(validationError);
       return;
     }
     if (response) {

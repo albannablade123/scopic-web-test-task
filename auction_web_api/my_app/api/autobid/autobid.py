@@ -97,7 +97,6 @@ def create_or_update_auto_bid(request: Request):
 
     total_auto_bid_amount = Autobid.objects.filter(user=user).aggregate(total=models.Sum('current_auto_bid_amount'))['total'] or 0
 
-    print(Autobid.objects.filter(user=user).aggregate(total=models.Sum('current_auto_bid_amount'))['total'])
     remaining_bid_amount = max_bid_amount - total_auto_bid_amount
 
     if max_bid_amount > remaining_bid_amount:

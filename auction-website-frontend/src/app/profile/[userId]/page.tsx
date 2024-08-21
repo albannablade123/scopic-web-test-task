@@ -1,5 +1,6 @@
 "use client"
 import BidTable from "@/app/components/BidTable";
+import BillTable from "@/app/components/BillTable";
 import UserCard from "@/app/components/UserCard";
 import { Tabs, Tab, Card, CardBody } from "@nextui-org/react";
 
@@ -12,20 +13,24 @@ export default function Profile() {
         </div>
         <div className="bg-red-600 h-full col-span-3 ">
           <Tabs aria-label="Options">
-            <Tab key="photos" title="Photos">
+            <Tab key="history" title="Bid History">
               <Card>
                 <CardBody>
                   <BidTable/>
                 </CardBody>
               </Card>
             </Tab>
-            <Tab key="music" title="Music">
+            <Tab key="Bills" title="My Bills">
               <Card>
                 <CardBody>
-                  Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                  laboris nisi ut aliquip ex ea commodo consequat. Duis aute
-                  irure dolor in reprehenderit in voluptate velit esse cillum
-                  dolore eu fugiat nulla pariatur.
+                  <BillTable/>
+                </CardBody>
+              </Card>
+            </Tab>
+            <Tab key="user_items" title="My Items">
+              <Card>
+                <CardBody>
+                  <BillTable/>
                 </CardBody>
               </Card>
             </Tab>

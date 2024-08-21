@@ -9,3 +9,4 @@ django==5.0
 celery==5.4.0
 alembic==1.13.2
 django-celery-beat==2.6.0
+redis==5.0.8

@@ -13,6 +13,7 @@ services:
   django_gunicorn:
     volumes:
       - static:/static
+      - ./auction_web_api/db.sqlite3:/app/db.sqlite3  # Bind-mount the local SQLite file to the container
     env_file:
       - .env
     build:
@@ -25,12 +26,29 @@ services:
     container_name: celery
     build:
       context: ./auction_web_api
+      dockerfile: Dockerfile.celery
     command: celery --app=auction_web_api worker -l DEBUG
-    image: django_celery_example_celery_worker
     volumes:
       - static:/static
-    env_file:
-      - .env
+      - ./auction_web_api/db.sqlite3:/app/db.sqlite3  # Bind-mount the same local SQLite file here
+
+    environment:
+      - DEBUG=1
+    depends_on:
+      - redis
+
+  celery-beat:
+    build: 
+      context: ./auction_web_api
+      dockerfile: Dockerfile.celery
+    command: celery -A auction_web_api beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    volumes:
+      - ./auction_web_api/:/usr/src/app/
+      - ./auction_web_api/db.sqlite3:/app/db.sqlite3  # Bind-mount the local SQLite file to the container
+    environment:
+      - DEBUG=1
+      - SECRET_KEY=dbaa1_i7%*3r9-=z-+_mz4r-!qeed@(-a_r(g@k8jo8y3r27%m
+      - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
     depends_on:
       - redis
 
@@ -39,3 +57,4 @@ services:
 
 volumes:
   static:
+  sqlite-data:  # Define the volume for SQLite database

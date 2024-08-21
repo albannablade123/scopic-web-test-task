@@ -15,5 +15,7 @@ urlpatterns = [
     re_path(r'^api/autobid$', views.autobid_collection, name='autobid'),
     re_path(r'^api/autobid/(?P<id>[0-9]+)$', views.autobid),
     re_path(r'^api/autobid/toggle$', views.toggle_autobid, name='turn_off_auto_bid'),
+    re_path(r'^api/bill/(?P<id>[0-9]+)$', views.get_bills_by_user_id, name='get_bills'),
+    re_path(r'^api/user/(?P<id>[0-9]+)/bid$', views.get_items_by_user, name='user-bids'),
 
 ]
