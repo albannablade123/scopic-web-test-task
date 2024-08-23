@@ -18,8 +18,13 @@ from django.contrib import admin
 from django.urls import path
 from django.urls import include, re_path
 
+from my_app.channels import BidConsumer
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     re_path(r'^', include('my_app.urls')),
+]
+
+websocket_urlpatterns = [
+    path("bid/<str:item_id>/", BidConsumer.as_asgi()),
 ]

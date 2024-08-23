@@ -33,6 +33,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -106,6 +107,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'auction_web_api.wsgi.application'
+ASGI_APPLICATION = 'auction_web_api.asgi.application'
 
 
 # Database
@@ -166,4 +168,19 @@ CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
 
 CELERY_RESULT_BACKEND = os.environ.get("CELERY_BACKED", "redis://redis:6379/0")
 
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [(os.environ.get("CHANNELS_URLS", "redis://redis:6379/0"))],
+        },
+    },
+}
 
+EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST= 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'hasantest304@gmail.com'
+EMAIL_HOST_PASSWORD = 'bnvohvipyigkzvzo'
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False

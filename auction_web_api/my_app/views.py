@@ -20,6 +20,7 @@ from .api.autobid_configuration.get import get_autobid_config_list_handler
 from .api.autobid_configuration.create import create_autobid_config
 from .api.autobid_configuration.update import update_autobid_config_handler
 from .api.bill.get_bills_by_user import get_bill_list_handler
+from .api.bill.get_bills_by_item_id import get_bill_by_item_list_handler
 
 from .api.autobid.autobid import update_auto_bid, toggle_auto_bid, create_or_update_auto_bid, get_auto_bid
 
@@ -122,5 +123,9 @@ def get_bills_by_user_id(request: Request, id):
 def get_items_by_user(request: Request, id):
     if request.method == 'GET':
         return get_unique_items_bidded_by_user(request, id)
-    
+
+@api_view(['GET'])
+def get_bill_by_item(request: Request, id):
+    if request.method == 'GET':
+        return get_bill_by_item_list_handler(request, id)
 

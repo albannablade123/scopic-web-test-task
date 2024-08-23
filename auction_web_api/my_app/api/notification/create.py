@@ -18,7 +18,6 @@ def create_notification_handler(request: Request):
             )
         notification_data = json.loads(payload.decode("utf-8"))
         serializer = NotificationSerializer(data=notification_data)
-        print(notification_data)
         if serializer.is_valid():
             notification = serializer.save()
             return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)

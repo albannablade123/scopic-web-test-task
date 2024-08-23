@@ -1,5 +1,7 @@
 FROM python:3.12.5-alpine3.20
 
+ENV PYTHONUNBUFFERED=1
+
 RUN pip install --upgrade pip
 
 COPY ./requirements.txt .

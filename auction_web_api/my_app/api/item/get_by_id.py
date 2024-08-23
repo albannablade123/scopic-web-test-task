@@ -51,7 +51,6 @@ def get_unique_items_bidded_by_user(request: Request, user_id):
         )
         serializer = ItemSerializer(items_with_latest_bids, many=True, context={'user_id': user_id})
 
-        print(serializer.data)
         return JsonResponse(
                 serializer.data,
                 status=status.HTTP_200_OK,
