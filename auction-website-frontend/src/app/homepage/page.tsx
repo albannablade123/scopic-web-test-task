@@ -36,7 +36,6 @@ export default function Home() {
   useEffect(() => {
     const fetchItems = async () => {
       const fetchedItems = await itemService.getAllItemActions();
-      console.log("Fetched products:", fetchedItems); // Print products to the console
       setItems(fetchedItems);
     };
 
@@ -54,10 +53,10 @@ export default function Home() {
       let filteredListings = [...items];
       const now = new Date(); // Current date and time
 
-      filteredListings = filteredListings.filter((item) => {
-        const expiryDate = new Date(item.expiry_time);
-        return expiryDate > now;
-      });
+      // filteredListings = filteredListings.filter((item) => {
+      //   const expiryDate = new Date(item.expiry_time);
+      //   return expiryDate > now;
+      // });
       if (hasSearchFilter) {
         filteredListings = filteredListings.filter(
           (item) =>
@@ -141,7 +140,6 @@ export default function Home() {
         } else {
           cmp = 0; // Default comparison if types are not as expected
         }
-        console.log(sortDescriptor.direction);
         return sortDescriptor.direction === "descending" ? -cmp : cmp;
       });
     }

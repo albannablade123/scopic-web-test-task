@@ -107,7 +107,6 @@ export class ItemService {
         },
         body: JSON.stringify(formData),
       });
-
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }

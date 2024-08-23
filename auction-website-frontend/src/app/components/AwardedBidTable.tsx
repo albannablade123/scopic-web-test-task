@@ -9,11 +9,10 @@ import {
 } from "@nextui-org/table";
 import { Input } from "postcss";
 import { useState, useEffect, useMemo, useCallback } from "react";
-import { Bid, columns, renderCell } from "../profile/column_bid";
+import { Bid, columns, renderCell } from "../profile/column_awarded";
 import { ItemService } from "../utils/actions/ItemService";
 import { SearchIcon } from "./icons";
 import { BidService } from "../utils/actions/BidService";
-import BillModal from "./BillModal";
 
 export default function BidTable() {
   const bidService = new BidService();
@@ -23,7 +22,6 @@ export default function BidTable() {
 
   const fetchBid = async () => {
     const fetchedBid = await bidService.getAllBidsByUserId(1);
-    // console.log("Fetched fetchedBid:", fetchedBid); // Print fetchedBid to the console
     setConvertedBid(fetchedBid);
   };
 
@@ -31,17 +29,29 @@ export default function BidTable() {
     fetchBid();
   }, []);
 
-  const [page, setPage] = useState(1);
-  const rowsPerPage = 10;
+  // const filteredBid = useMemo(() => {
+  //   let filteredListings = [...convertedBid];
 
-  const pages = Math.ceil(convertedBid.length / rowsPerPage);
+  //   if (hasSearchFilter) {
+  //     filteredListings = filteredListings.filter((bid) =>
+  //       bid.name.toLowerCase().includes(filterValue.toLowerCase())
+  //     );
+  //   }
 
-  const pageBid = useMemo(() => {
-    const start = (page - 1) * rowsPerPage;
-    const end = start + rowsPerPage;
+  //   return filteredListings;
+  // }, [convertedBid, filterValue, hasSearchFilter]);
 
-    return convertedBid.slice(start, end);
-  }, [page]);
+  // const [page, setPage] = useState(1);
+  // const rowsPerPage = 10;
+
+  // const pages = Math.ceil(filteredBid.length / rowsPerPage);
+
+  // const pageBid = useMemo(() => {
+  //   const start = (page - 1) * rowsPerPage;
+  //   const end = start + rowsPerPage;
+
+  //   return filteredBid.slice(start, end);
+  // }, [page, filteredBid]);
 
   // const [sortDescriptor, setsortDescriptor] = useState({
   //   column: "name",
@@ -66,6 +76,18 @@ export default function BidTable() {
   //     setFilterValue("");
   //   }
   // }, []);
+
+  const [page, setPage] = useState(1);
+  const rowsPerPage = 10;
+
+  const pages = Math.ceil(convertedBid.length / rowsPerPage);
+
+  const pageBill = useMemo(() => {
+    const start = (page - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+
+    return convertedBid.slice(start, end);
+  }, [page, convertedBid]);
 
   const onClear = useCallback(() => {
     setFilterValue("");
@@ -98,6 +120,7 @@ export default function BidTable() {
         {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
       </TableHeader>
       <TableBody items={convertedBid} emptyContent={"No bid to display"}>
+        
         {(bid) => (
           <TableRow key={bid.id}>
             {(columnKey) => (

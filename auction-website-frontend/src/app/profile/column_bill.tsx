@@ -1,7 +1,7 @@
 export type Bill = {
     user: number;
     item: number;
-    amount: string;
+    amount: number;
     billing_address: string;
     timestamp: string; // or Date if you prefer to handle it as a Date object
   };
@@ -11,7 +11,6 @@ export type Bill = {
     columnKey: React.Key,
   ) => {
     const cellValue = bill[columnKey as keyof Bill];
-    console.log(cellValue,"____________DDDD________________")
   
     switch (columnKey) {
       default:
@@ -31,10 +30,6 @@ export type Bill = {
     {
       key: "amount",
       label: "AMOUNT",
-    },
-    {
-      key: "billing_address",
-      label: "BILLING ADDRESS",
     },
     {
       key: "timestamp",

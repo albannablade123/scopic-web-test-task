@@ -47,7 +47,9 @@ export default function CountdownTimer(props: any) {
   return (
     <div>
       {closingTime ? (
-        <h1>Bid Closed</h1>
+        <div className="flex justify-center items-center p-6 bg-beige rounded-lg shadow-md" >
+          <h1 className="font-semibold">This Auction is now Closed</h1>
+        </div>
       ) : (
         <div className="flex justify-center items-center p-6 bg-beige rounded-lg shadow-md">
           <div className="flex space-x-4">

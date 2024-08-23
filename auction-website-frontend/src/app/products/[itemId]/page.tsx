@@ -5,6 +5,8 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import BidComponent from "@/app/components/BidComponent";
+import BidTable from "@/app/components/BidTable";
+import BillTable from "@/app/components/BillTable";
 
 const Horizontal = () => {
   return <hr className="w-[30% my-2]" />;
@@ -44,7 +46,7 @@ export default function Items() {
   const [highestBid, setHighestBid] = useState({});
   const [userId, setUserId] = useState("");
   const [bids, setBids] = useState([]);
-
+  const [isExpired, setIsExpired] = useState(false);
 
   const searchParams = useSearchParams();
   const itemIdString = searchParams.get("id");
@@ -53,6 +55,14 @@ export default function Items() {
   const [amount, setAmount] = useState("");
 
   useEffect(() => {
+    const expiryTime = new Date(itemDetail?.expiry_time);
+    const now = new Date();
+    console.log(expiryTime, now);
+
+    // Check if the current time is after the expiry time
+    if (now > expiryTime) {
+      setIsExpired(true);
+    }
     const getUserId = async () => {
       const response = await fetch("http://localhost:8000/api/user", {
         credentials: "include",
@@ -69,12 +79,17 @@ export default function Items() {
     const fetchBids = async (itemId: number) => {
       try {
         const bids = await itemService.getAllBidsByItemId(itemId, 1, 1);
-        console.log("Fetched bids:", bids);
+        // console.log("Fetched bids:", bids);
         if (bids.length > 0) {
-          setBids(bids)
-          const bid = bids.reduce((acc, bid) =>
-            acc.amount > bid.amount ? acc : bid
-          );
+          setBids(bids);
+          const bid = bids.reduce((acc, bid) => {
+            // Convert amount to numbers if they are strings
+            const accAmount = typeof acc.amount === 'string' ? parseFloat(acc.amount) : acc.amount;
+            const bidAmount = typeof bid.amount === 'string' ? parseFloat(bid.amount) : bid.amount;
+          
+            return accAmount > bidAmount ? acc : bid;
+          });
+          
 
           setHighestBid({
             amount: bid.amount,
@@ -165,7 +180,7 @@ export default function Items() {
     }
 
     getUserId();
-  }, [itemId, userId]);
+  }, [itemId, userId, itemDetail.expiry_time]);
 
   const handleCheckboxChange = async (e) => {
     const isChecked = e.target.checked;
@@ -267,16 +282,16 @@ export default function Items() {
     }
   };
 
-  const sortedBids = bids.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-  console.log("CCCCCCCCCCCCCCCCC", sortedBids)
-
+  const sortedBids = bids.sort(
+    (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
+  );
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-12  p-6 mt-10 px-10 mx-10">
       <div>
         <Image
-          alt=''
-          src={itemDetail.image_large || '/images.png'}
+          alt=""
+          src={itemDetail.image_large || "/images.png"}
           width={500}
           height={500}
           objectFit="cover"
@@ -288,7 +303,7 @@ export default function Items() {
           )}
           onLoad={() => setLoading(false)}
         />
-                <div>
+        <div>
           <h2>Bid History</h2>
           <div className="max-h-48 overflow-y-auto">
             {bids.length === 0 ? (
@@ -339,50 +354,67 @@ export default function Items() {
           )}
           <h3 className=" font-small text-slate-900 mt-6">Bids</h3>
           <Horizontal />
-          <div className="mt-3 mb-3 ">
-            <div className="grid grid-cols-2 gap-4 ">
-              <div className=" grid grid-row-2 text-right p-3 ">
-                <BidComponent highestBid={highestBid} userId={userId} />
-              </div>
-              <div className="mt-4 ">
-                <form onSubmit={handleSubmit}>
-                  <input
-                    type="number"
-                    value={amount}
-                    onChange={(e) => setAmount(e.target.value)}
-                    placeholder="Enter your bid"
-                    className="px-4 py-2 border rounded-lg w-full mb-4"
-                    required
-                  />
-                  <button
-                    type="submit"
-                    className="px-4 py-2 bg-beige-dark text-white rounded-lg hover:bg-beige ml-2"
-                  >
-                    Bid Now
-                  </button>
-                </form>
+          {!isExpired ? (
+            <div className="mt-3 mb-3 ">
+              <div className="grid grid-cols-2 gap-4 ">
+                <div className=" grid grid-row-2 text-right p-3 ">
+                  <BidComponent highestBid={highestBid} userId={userId} />
+                </div>
+                <div className="mt-4 ">
+                  <form onSubmit={handleSubmit}>
+                    <input
+                      type="number"
+                      value={amount}
+                      onChange={(e) => setAmount(e.target.value)}
+                      placeholder="Enter your bid"
+                      className="px-4 py-2 border rounded-lg w-full mb-4"
+                      required
+                    />
+                    <button
+                      type="submit"
+                      className="px-4 py-2 bg-beige-dark text-white rounded-lg hover:bg-beige ml-2"
+                    >
+                      Bid Now
+                    </button>
+                  </form>
+                </div>
               </div>
             </div>
-          </div>
+          ) : (
+            <div className=" grid grid-row-2 text-right p-3 ">
+              <BidComponent highestBid={highestBid} userId={userId} />
+            </div>
+          )}
+
           <Horizontal />
 
           <div className="mt-2">
-            <label className="inline-flex items-center">
-              <input
-                type="checkbox"
-                className="form-checkbox"
-                checked={autoBidActive}
-                onChange={handleCheckboxChange}
-              />
-              <span className="ml-2">Auto Bid</span>
-            </label>
-            {error && <p className="text-red-500">{error}</p>}
+            {isExpired ? (
+              <p></p>
+            ) : (
+              <>
+                <label className="inline-flex items-center">
+                  <input
+                    type="checkbox"
+                    className="form-checkbox"
+                    checked={autoBidActive}
+                    onChange={handleCheckboxChange}
+                  />
+                  <span className="ml-2">Auto Bid</span>
+                </label>
+
+                {error && <p className="text-red-500">{error}</p>}
+              </>
+            )}
           </div>
           <h3 className=" font-small text-slate-900 mt-6">Description</h3>
           <Horizontal />
           <div className="text-justify text-lg">{itemDetail.description}</div>
           <Horizontal />
         </div>
+      </div>
+      <div className="col-span-2">
+        <BillTable itemId={itemId}/>
       </div>
     </div>
   );

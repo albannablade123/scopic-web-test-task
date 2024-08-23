@@ -1,7 +1,12 @@
+"use client";
 import { Button } from "@nextui-org/react";
+import { useState } from "react";
+import BillModal from "../components/BillModal";
 
 export type Bid = {
+  id: string;
   user: number;
+  name: string;
   item: number;
   amount: string;
   auto_bidding: boolean;
@@ -9,26 +14,15 @@ export type Bid = {
   status: string;
 };
 
-export const renderCell = (
-  bid: Bid,
-  columnKey: React.Key,
-) => {
+export const renderCell = (bid: Bid, columnKey: React.Key) => {
   const cellValue = bid[columnKey as keyof Bid];
-
   switch (columnKey) {
-    case "latest_bid_status":
-      if (cellValue == "won") {
-        return <h2 className="text-green-700 font-semibold mx-auto">Won</h2>
-      }
-      else if(cellValue == "in_progress"){
-        return <h2 className="font-semibold mx-auto">In Progress</h2>
-      }
-      else{
-        return <h2 className="text-red-700 font-semibold mx-auto">Lost</h2>
-      }
+    case "bill":
       return (
-        <Button>View Item Bill</Button>
-      )
+        <>
+          <BillModal item_id={bid.id} name={bid.name}/>
+        </>
+      );
     default:
       return cellValue;
   }
@@ -48,7 +42,7 @@ export const columns = [
     label: "BID AMOUNT",
   },
   {
-    key: "latest_bid_status",
-    label: "STATUS"
-  }
+    key: "bill",
+    label: "BILL",
+  },
 ];
