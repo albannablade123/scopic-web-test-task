@@ -1,4 +1,6 @@
 from decimal import Decimal
+
+from ..tasks import send_max_bid_exceeded_notification
 from ..serializers.notification import NotificationSerializer
 from ..serializers.bid import BidSerializer
 from ..models.autobid import Autobid
@@ -46,7 +48,6 @@ def process_auto_bids(item_id, triggering_user_id=None):
 
                     # Check if the threshold percentage is reached
                     threshold_amount = (alert_percentage / Decimal('100')) * max_bid_amount
-
                     if new_bid_amount >= threshold_amount:
                         # Create a new notification
                         notification_data = {
@@ -55,6 +56,7 @@ def process_auto_bids(item_id, triggering_user_id=None):
                             'message': f"Your auto-bid has reached {alert_percentage}% of the maximum bid amount for item {item_id}.",
                             # Add any other required fields for Notification
                         }
+                        send_max_bid_exceeded_notification(alert_percentage=alert_percentage, user_id=user_id, item_id=item_id)
 
                         notification_serializer = NotificationSerializer(data=notification_data)
                         if notification_serializer.is_valid():

@@ -130,8 +130,6 @@ def get_auto_bid(request):
     item_id = request.query_params.get('item_id')
     user_id = request.query_params.get('user_id')
 
-    print(item_id,user_id)
-
     if not user_id or not item_id:
         return JsonResponse({"error": "Missing parameters"}, status=status.HTTP_400_BAD_REQUEST)
 
