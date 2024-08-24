@@ -193,7 +193,7 @@
         "name": "Old Newspaper Collection",
         "description": "A collection of old newspapers with historical events.",
         "expiry_time": "2024-12-20T21:15:00Z",
-        "start_time": "2024-11-20T14:15:00Z",
+        "start_time": "2024-08-20T14:15:00Z",
         "starting_price": "350"
       }
     },
@@ -204,7 +204,7 @@
         "name": "Vintage Typewriter",
         "description": "A vintage typewriter in working condition.",
         "expiry_time": "2024-12-31T23:59:59Z",
-        "start_time": "2024-11-25T15:30:00Z",
+        "start_time": "2024-08-25T15:30:00Z",
         "starting_price": "700"
       }
     }
