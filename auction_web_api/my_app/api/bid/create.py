@@ -2,6 +2,8 @@ from django.http.response import JsonResponse
 from rest_framework.request import Request
 from rest_framework import status
 
+from ...tasks import send_outbid_notification
+
 from ...utils.process_bid import process_auto_bids
 from ...models.bid import Bid
 from ...serializers.bid import BidSerializer
@@ -49,6 +51,8 @@ def create_bid_handler(request: Request):
                     }
                 }
             )
+
+            send_outbid_notification(item_id, user_id)
 
             return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
         else:

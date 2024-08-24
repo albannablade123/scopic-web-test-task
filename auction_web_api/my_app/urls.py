@@ -9,6 +9,7 @@ urlpatterns = [
     re_path(r'^api/login$', views.user_login, name='user_login'),
     re_path(r'^api/logout$', views.user_logout, name='user_logout'),
     re_path(r'^api/user$', views.user, name='get_user'),
+    re_path(r'^api/user/(?P<id>[0-9]+)/update-email$', views.update_email_view, name='update-email'),
     re_path(r'^api/bid$', views.bid_collection, name='create_bid'),
     re_path(r'^api/notification$', views.notification_collection, name='notification'),
     re_path(r'^api/config$', views.configuration_collection, name='notification'),
@@ -18,5 +19,4 @@ urlpatterns = [
     re_path(r'^api/autobid/toggle$', views.toggle_autobid, name='turn_off_auto_bid'),
     re_path(r'^api/bill/(?P<id>[0-9]+)$', views.get_bills_by_user_id, name='get_bills'),
     re_path(r'^api/user/(?P<id>[0-9]+)/bid$', views.get_items_by_user, name='user-bids'),
-
 ]

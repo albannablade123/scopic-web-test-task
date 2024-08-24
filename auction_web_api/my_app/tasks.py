@@ -48,6 +48,40 @@ def update_bids_status_to_lost(item_id, winning_bid_id=None):
         # Log or print the result
         print(f"Updated {updated_count} bids to 'lost' for item with ID {item_id}.")
 
+
+@shared_task
+def send_outbid_notification(item_id, current_user_id):
+    try:
+        User = get_user_model()
+
+        # Get all users who placed bids on the item except the current user
+        outbid_users = Bid.objects.filter(item_id=item_id).exclude(user_id=current_user_id).values_list('user_id', flat=True).distinct()
+
+        for user_id in outbid_users:
+            user = User.objects.get(id=user_id)
+            item = Item.objects.get(id=item_id)
+            
+            # Send an email notification (or any other type of notification)
+            email = user.notification_email
+            # email = user.email
+            recipient_list = [email]
+            subject = f"You have been outbid on Item: {item.name}"
+            message = """
+            Dear {username},
+
+            Unfortunately, your bid on the item {item_name} has been outbid.
+
+            Best Regards,
+            Antique Auction
+            """.format(
+                username=user.username,
+                item_name=item.name
+            )
+            send_mail(subject, message, settings.EMAIL_HOST_USER, recipient_list, fail_silently=True)
+
+    except Exception as e:
+        print(f'An exception occurred while sending outbid notifications: {e}')
+
 @shared_task
 def send_max_bid_exceeded_notification(user_id, item_id, alert_percentage):
     try:
@@ -56,7 +90,7 @@ def send_max_bid_exceeded_notification(user_id, item_id, alert_percentage):
         user = User.objects.get(id=user_id)  # Ensure we have a User instance
         item = Item.objects.get(id=item_id)
         print("C2")
-        email = "sandpichdich@gmail.com"
+        email = user.notification_email
         recipient_list = [email]
         subject=f"Exceeded Maximum Bid amount for Item: {item.name}"
         message = """
@@ -132,7 +166,7 @@ def send_awarded_bid_email_notificiation(item, bill, bid):
     )
     subject = "Congratulations on Winning the Auction"
     message = "Dear Customer, your bid has been succesfully processed"
-    email = "sandpichdich@gmail.com"
+    email = user.notification_email
     recipient_list = [email]
     send_mail(subject, email_body, settings.EMAIL_HOST_USER, recipient_list, fail_silently=True)
 

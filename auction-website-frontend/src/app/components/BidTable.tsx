@@ -76,8 +76,6 @@ export default function BidTable({userId}: BidTableProps) {
     //   setPage(1);
   }, []);
 
-  console.log(fetchBid);
-
   return (
     <Table
       aria-label="Example static collection table"

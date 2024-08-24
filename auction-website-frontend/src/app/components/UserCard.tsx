@@ -1,20 +1,76 @@
 "use client";
-import { Card, CardBody, Divider } from "@nextui-org/react";
+import { Button, Card, CardBody, Divider, Input } from "@nextui-org/react";
 import { ChangeEvent, useEffect, useState } from "react";
 import Image from "next/image";
 // import NotificationSettings from "./NotificationSettings";
 
 interface UserCardProps {
+  id: number;
   username: string;
+  notification_email: string;
 }
 
-export default function UserCard({ username }: UserCardProps) {
+export default function UserCard({
+  username,
+  notification_email,
+  id,
+}: UserCardProps) {
+  const [email, setEmail] = useState(notification_email);
+  const [isEditing, setIsEditing] = useState(false);
+
+  useEffect(() => {
+    if (notification_email) {
+      setEmail(notification_email);
+    }
+  }, [notification_email]);
+  
+  console.log(notification_email,"SSSSSS",email)
   const dummyNotificationSettings = {
     newBid: true,
     biddingFinished: false,
     bidAmountState: false,
     exceedsMaxBid: true,
   };
+
+  const handleEmailChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setEmail(event.target.value);
+  };
+
+  const handleEditClick = () => {
+    setIsEditing(true);
+  };
+
+  const handleCancelClick = () => {
+    setIsEditing(false);
+    setEmail(notification_email);
+  };
+
+  const handleSubmitClick = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:8000/api/user/${id}/update-email`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email }),
+        }
+      );
+
+      if (response.ok) {
+        const content = await response.json();
+        console.log("Email updated successfully:", content);
+        setIsEditing(false);
+      } else {
+        console.error("Failed to update email");
+      }
+    } catch (error) {
+      console.error("An error occurred:", error);
+    }
+  };
+
   const [notifications, setNotifications] = useState(dummyNotificationSettings);
   useEffect(() => {
     const getUserId = async () => {
@@ -30,7 +86,7 @@ export default function UserCard({ username }: UserCardProps) {
     getUserId();
   }, []);
 
-  const handleNotificationChange = (event :  ChangeEvent<HTMLInputElement>) => {
+  const handleNotificationChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = event.target;
     setNotifications((prevNotifications) => ({
       ...prevNotifications,
@@ -53,8 +109,38 @@ export default function UserCard({ username }: UserCardProps) {
         <hr className="mb-3" />
 
         <div>Name: {username}</div>
-        <div>Email: test@mail.com</div>
-        <div>Date Joined: </div>
+
+        <div className="mb-3">
+          <div>
+            Email:
+            {isEditing ? (
+              <Input
+                className="ml-2"
+                type="email"
+                value={email}
+                onChange={handleEmailChange}
+                size="sm"
+              />
+            ) : (
+              <span className="ml-2">{email}</span>
+            )}
+          </div>
+        </div>
+
+        {isEditing ? (
+          <div className="flex justify-center space-x-2 mt-3">
+            <Button  onClick={handleSubmitClick}>
+              Submit
+            </Button>
+            <Button color="warning" onClick={handleCancelClick}>
+              Cancel
+            </Button>
+          </div>
+        ) : (
+          <Button onClick={handleEditClick} className="mt-3">
+            Edit Email
+          </Button>
+        )}
 
         {/* <h3 className="text-left ml-4 mt-3 font-semibold">
           Notification Settings

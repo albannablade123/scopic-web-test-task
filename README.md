@@ -18,7 +18,7 @@ The application is built using Django for the backend and Next.js for the fronte
 - **Next.js**: React framework for building server-side rendered applications.
 - **Other dependencies**: As listed in `package.json`.
 
-## Running the Application
+## Running the Application 
 
 ### Cloning the repository
 
@@ -28,6 +28,67 @@ https://github.com/albannablade123/scopic-web-test-task.git
 cd scopic-web-test-task
 ```
 
+### Main Option : Running through Docker
+## 2. Build and Run the Containers:
+Requirement: docker, docker-compose
+
+It is recommended to run this project through docker through docker-compose due to notification requirements. after cloning and changing directory, to scopic-web-test-task. Run the following command
+
+```
+docker-compose run --build
+```
+
+This will build and run containers, with the front-end container being in port localhost:3000 while the django back-end is in localhost:8000
+The --build flag ensures that Docker rebuilds the images before starting the containers.
+The containers can also be run in detached mode (in the background), using the -d flag:
+
+```
+docker-compose up --build -d
+```
+
+## 3. Access the Application:
+Once the containers are up and running, you can access the application at the following URLs:
+
+- Front-end: http://localhost:3000
+- Django Back-end API: http://localhost:8000
+
+Refer to OpenApi spec for REST Endpoints
+
+## 4. Stopping the Containers:
+
+To stop the running containers, use:
+
+```
+docker-compose down
+```
+
+## 6. Additional Commands:
+View Logs: To view the logs of the running containers:
+
+```
+docker-compose logs
+```
+
+Execute Commands Inside Containers: To open a shell inside a running container, use:
+
+```
+docker-compose exec <service_name> /bin/bash
+```
+Replace <service_name> with the name of the service you want to access (e.g., auction-frontend or django_gunicorn).
+
+## TroubleShooting
+
+- Build Issues: If you encounter issues with building the Docker images, try cleaning up any cached images and rebuild:
+```
+docker system prune -a
+docker-compose up --build
+
+```
+Port Conflicts: Ensure that ports 3000 and 8000 are not being used by other services on your host machine. You may need to stop other applications or change the ports in the docker-compose.yml file.
+
+
+
+## Running Locally (Not Recommended)
 ### Setting up and Starting the Django Back-end server
 
 #### Change directory to auction_web_api application 

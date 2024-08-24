@@ -1,0 +1,1280 @@
+openapi: 3.0.0
+info:
+  title: Your API Title
+  description: Description of your API
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8000
+    description: Local development server
+
+paths:
+  /api/item:
+    get:
+      summary: Retrieve a list of items
+      description: Get a list of all items available in the system.
+      responses:
+        '200':
+          description: A list of items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    name:
+                      type: string
+                      example: "Vintage Lamp"
+                    description:
+                      type: string
+                      example: "A rare vintage lamp from the 1950s."
+                    small_image:
+                      type: string
+                      example: ""
+                    large_image:
+                      type: string
+                      example: ""
+                    starting_price:
+                      type: string
+                      format: decimal
+                      example: "250.00"
+                    expiry_time:
+                      type: string
+                      format: date-time
+                      example: "2024-11-30T23:59:59Z"
+                    start_time:
+                      type: string
+                      format: date-time
+                      example: "2024-09-01T12:00:00Z"
+                    is_closed:
+                      type: boolean
+                      example: false
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+
+    post:
+      summary: Create a new item
+      description: Add a new item to the system.
+      requestBody:
+        description: Item object that needs to be added
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "Vintage Lamp"
+                description:
+                  type: string
+                  example: "A rare vintage lamp from the 1950s."
+                small_image:
+                  type: string
+                  example: ""
+                large_image:
+                  type: string
+                  example: ""
+                starting_price:
+                  type: string
+                  format: decimal
+                  example: "250.00"
+                expiry_time:
+                  type: string
+                  format: date-time
+                  example: "2024-11-30T23:59:59Z"
+                start_time:
+                  type: string
+                  format: date-time
+                  example: "2024-09-01T12:00:00Z"
+                is_closed:
+                  type: boolean
+                  example: false
+              required:
+                - name
+                - starting_price
+                - expiry_time
+                - start_time
+      responses:
+        '201':
+          description: Item created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  name:
+                    type: string
+                    example: "Vintage Lamp"
+                  description:
+                    type: string
+                    example: "A rare vintage lamp from the 1950s."
+                  small_image:
+                    type: string
+                    example: ""
+                  large_image:
+                    type: string
+                    example: ""
+                  starting_price:
+                    type: string
+                    format: decimal
+                    example: "250.00"
+                  expiry_time:
+                    type: string
+                    format: date-time
+                    example: "2024-11-30T23:59:59Z"
+                  start_time:
+                    type: string
+                    format: date-time
+                    example: "2024-09-01T12:00:00Z"
+                  is_closed:
+                    type: boolean
+                    example: false
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+  /api/item/{id}:
+    get:
+      summary: Retrieve an item by ID
+      description: Get the details of a specific item using its ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: The ID of the item to retrieve.
+      responses:
+        '200':
+          description: Item details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 2
+                  name:
+                    type: string
+                    example: "Antique Clock"
+                  description:
+                    type: string
+                    example: "A beautiful antique clock with intricate details."
+                  small_image:
+                    type: string
+                    example: ""
+                  large_image:
+                    type: string
+                    example: ""
+                  starting_price:
+                    type: string
+                    format: decimal
+                    example: "750.00"
+                  expiry_time:
+                    type: string
+                    format: date-time
+                    example: "2024-10-15T18:00:00Z"
+                  start_time:
+                    type: string
+                    format: date-time
+                    example: "2024-09-10T10:00:00Z"
+                  is_closed:
+                    type: boolean
+                    example: false
+                  latest_bid_status:
+                    type: string
+                    nullable: true
+                    example: null
+                  highest_bid_amount:
+                    type: string
+                    nullable: true
+                    format: decimal
+                    example: null
+                  winner:
+                    type: string
+                    nullable: true
+                    example: null
+        '404':
+          description: Item not found
+        '500':
+          description: Internal server error
+
+    put:
+      summary: Update an item by ID
+      description: Update the details of a specific item using its ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: The ID of the item to update.
+      requestBody:
+        description: Item object that needs to be updated
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "Antique Clock"
+                description:
+                  type: string
+                  example: "A beautiful antique clock with intricate details."
+                small_image:
+                  type: string
+                  example: ""
+                large_image:
+                  type: string
+                  example: ""
+                starting_price:
+                  type: string
+                  format: decimal
+                  example: "750.00"
+                expiry_time:
+                  type: string
+                  format: date-time
+                  example: "2024-10-15T18:00:00Z"
+                start_time:
+                  type: string
+                  format: date-time
+                  example: "2024-09-10T10:00:00Z"
+                is_closed:
+                  type: boolean
+                  example: false
+                latest_bid_status:
+                  type: string
+                  nullable: true
+                  example: null
+                highest_bid_amount:
+                  type: string
+                  nullable: true
+                  format: decimal
+                  example: null
+                winner:
+                  type: string
+                  nullable: true
+                  example: null
+              required:
+                - name
+                - starting_price
+                - expiry_time
+                - start_time
+      responses:
+        '200':
+          description: Item updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 2
+                  name:
+                    type: string
+                    example: "Antique Clock"
+                  description:
+                    type: string
+                    example: "A beautiful antique clock with intricate details."
+                  small_image:
+                    type: string
+                    example: ""
+                  large_image:
+                    type: string
+                    example: ""
+                  starting_price:
+                    type: string
+                    format: decimal
+                    example: "750.00"
+                  expiry_time:
+                    type: string
+                    format: date-time
+                    example: "2024-10-15T18:00:00Z"
+                  start_time:
+                    type: string
+                    format: date-time
+                    example: "2024-09-10T10:00:00Z"
+                  is_closed:
+                    type: boolean
+                    example: false
+                  latest_bid_status:
+                    type: string
+                    nullable: true
+                    example: null
+                  highest_bid_amount:
+                    type: string
+                    nullable: true
+                    format: decimal
+                    example: null
+                  winner:
+                    type: string
+                    nullable: true
+                    example: null
+        '400':
+          description: Bad request
+        '404':
+          description: Item not found
+        '500':
+          description: Internal server error
+
+    delete:
+      summary: Delete an item by ID
+      description: Remove a specific item from the system using its ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: The ID of the item to delete.
+      responses:
+        '204':
+          description: Item deleted successfully
+        '404':
+          description: Item not found
+        '500':
+          description: Internal server error
+  /api/register:
+    post:
+      summary: Register a new user
+      description: Create a new user account with the provided registration details.
+      requestBody:
+        description: User registration object
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: "adminX"
+                password:
+                  type: string
+                  example: "admin2"
+                is_admin:
+                  type: boolean
+                  example: true
+              required:
+                - username
+                - password
+                - is_admin
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  username:
+                    type: string
+                    example: "adminX"
+                  is_admin:
+                    type: boolean
+                    example: true
+        '400':
+          description: Bad request, invalid input
+        '500':
+          description: Internal server error  
+  /api/login:
+    post:
+      summary: Log in a user
+      description: Authenticate a user and return a JWT token for subsequent requests.
+      requestBody:
+        description: User login object
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: "admin1"
+                password:
+                  type: string
+                  example: "admin2"
+              required:
+                - username
+                - password
+      responses:
+        '200':
+          description: Login successful, JWT token returned
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  jwt:
+                    type: string
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaXNBZG1pbiI6dHJ1ZSwiZXhwIjoxNzI0NTYwODQxLCJpYXQiOjE3MjQ0ODg4NDF9.0f-sYh-NZEMaoANK8gNqMbsEeW577r4SQleU-orbdKQ"
+        '400':
+          description: Bad request, invalid input
+        '401':
+          description: Unauthorized, invalid credentials
+        '500':
+          description: Internal server error
+  /api/logout:
+    post:
+      summary: Log out a user
+      description: Invalidate the user's session by removing the JWT cookie.
+      responses:
+        '200':
+          description: Logout successful, confirmation message returned
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "success"
+        '500':
+          description: Internal server error
+  /api/user:
+    get:
+      summary: Get user details
+      description: Retrieve information about the currently logged-in user.
+      responses:
+        '200':
+          description: User information retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  username:
+                    type: string
+                    example: "adminX"
+                  notification_email:
+                    type: string
+                    format: email
+                    example: "admin@example.com"
+                  is_admin:
+                    type: boolean
+                    example: true
+                required:
+                  - id
+                  - username
+                  - notification_email
+                  - is_admin
+        '401':
+          description: Unauthorized, user not authenticated
+        '500':
+          description: Internal server error
+  /api/bid:
+    get:
+      summary: Retrieve a list of bids
+      description: Fetch a paginated list of bids. Supports pagination parameters.
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            example: 1
+        - name: page_size
+          in: query
+          required: false
+          schema:
+            type: integer
+            example: 10
+      responses:
+        '200':
+          description: Successful retrieval of bid list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_bids:
+                    type: integer
+                    example: 1
+                  total_pages:
+                    type: integer
+                    example: 1
+                  current_page:
+                    type: integer
+                    example: 1
+                  page_size:
+                    type: integer
+                    example: 10
+                  bids:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        status:
+                          type: string
+                          example: "in_progress"
+                        user:
+                          type: integer
+                          example: 1
+                        item:
+                          type: integer
+                          example: 1
+                        amount:
+                          type: string
+                          example: "350.00"
+                        auto_bidding:
+                          type: boolean
+                          example: false
+                        timestamp:
+                          type: string
+                          format: date-time
+                          example: "2024-08-24T08:50:15.177982Z"
+                required:
+                  - total_bids
+                  - total_pages
+                  - current_page
+                  - page_size
+                  - bids
+        '500':
+          description: Internal server error
+
+    post:
+      summary: Create a new bid
+      description: Submit a new bid for an item.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: integer
+                  example: 1
+                item:
+                  type: integer
+                  example: 1
+                amount:
+                  type: string
+                  example: "350.00"
+                auto_bidding:
+                  type: boolean
+                  example: false
+              required:
+                - user
+                - item
+                - amount
+      responses:
+        '201':
+          description: Bid created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  status:
+                    type: string
+                    example: "in_progress"
+                  user:
+                    type: integer
+                    example: 1
+                  item:
+                    type: integer
+                    example: 1
+                  amount:
+                    type: string
+                    example: "350.00"
+                  auto_bidding:
+                    type: boolean
+                    example: false
+                  timestamp:
+                    type: string
+                    format: date-time
+                    example: "2024-08-24T08:50:15.177982Z"
+                required:
+                  - id
+                  - status
+                  - user
+                  - item
+                  - amount
+                  - auto_bidding
+                  - timestamp
+        '400':
+          description: Bad request, invalid input
+        '500':
+          description: Internal server error
+  /api/config:
+    get:
+      summary: Retrieve configuration settings
+      description: Fetch the auto-bid configuration settings for the authenticated user.
+      responses:
+        '200':
+          description: Successful retrieval of configuration settings
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: integer
+                    example: 1
+                  max_bid_amount:
+                    type: string
+                    example: "1000.00"
+                  auto_bid_alert_percentage:
+                    type: integer
+                    example: 90
+                required:
+                  - user
+                  - max_bid_amount
+                  - auto_bid_alert_percentage
+        '401':
+          description: Unauthorized, authentication required
+        '500':
+          description: Internal server error
+
+    post:
+      summary: Update configuration settings
+      description: Update the auto-bid configuration settings for the authenticated user.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                max_bid_amount:
+                  type: string
+                  example: "1000.00"
+                auto_bid_alert_percentage:
+                  type: integer
+                  example: 90
+              required:
+                - max_bid_amount
+                - auto_bid_alert_percentage
+      responses:
+        '200':
+          description: Successful update of configuration settings
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: integer
+                    example: 1
+                  max_bid_amount:
+                    type: string
+                    example: "1000.00"
+                  auto_bid_alert_percentage:
+                    type: integer
+                    example: 90
+                required:
+                  - user
+                  - max_bid_amount
+                  - auto_bid_alert_percentage
+        '400':
+          description: Bad request, invalid input
+        '401':
+          description: Unauthorized, authentication required
+        '500':
+          description: Internal server error
+  /api/config/{id}:
+    get:
+      summary: Retrieve specific configuration settings
+      description: Fetch the auto-bid configuration settings for the specified configuration ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the configuration to retrieve
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Successful retrieval of configuration settings
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: integer
+                    example: 1
+                  max_bid_amount:
+                    type: string
+                    example: "1000.00"
+                  auto_bid_alert_percentage:
+                    type: integer
+                    example: 90
+                required:
+                  - user
+                  - max_bid_amount
+                  - auto_bid_alert_percentage
+        '404':
+          description: Configuration not found
+        '500':
+          description: Internal server error
+
+    put:
+      summary: Update specific configuration settings
+      description: Update the auto-bid configuration settings for the specified configuration ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the configuration to update
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                max_bid_amount:
+                  type: string
+                  example: "1000.00"
+                auto_bid_alert_percentage:
+                  type: integer
+                  example: 90
+              required:
+                - max_bid_amount
+                - auto_bid_alert_percentage
+      responses:
+        '200':
+          description: Successful update of configuration settings
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: integer
+                    example: 1
+                  max_bid_amount:
+                    type: string
+                    example: "1000.00"
+                  auto_bid_alert_percentage:
+                    type: integer
+                    example: 90
+                required:
+                  - user
+                  - max_bid_amount
+                  - auto_bid_alert_percentage
+        '400':
+          description: Bad request, invalid input
+        '404':
+          description: Configuration not found
+        '500':
+          description: Internal server error
+  /api/autobid:
+    get:
+      summary: Retrieve auto-bid settings
+      description: Fetch the auto-bid settings for all users.
+      responses:
+        '200':
+          description: Successful retrieval of auto-bid settings
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_bids:
+                    type: integer
+                    example: 1
+                  total_pages:
+                    type: integer
+                    example: 1
+                  current_page:
+                    type: integer
+                    example: 1
+                  page_size:
+                    type: integer
+                    example: 10
+                  autobids:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        user:
+                          type: integer
+                          example: 1
+                        item:
+                          type: integer
+                          example: 1
+                        max_bid_amount:
+                          type: string
+                          example: "1000.00"
+                        current_auto_bid_amount:
+                          type: string
+                          example: "0.00"
+                        remaining_bid_amount:
+                          type: string
+                          example: "0.00"
+                        auto_bid_alert_percentage:
+                          type: integer
+                          example: 90
+                        auto_bidding_active:
+                          type: boolean
+                          example: false
+                        created_at:
+                          type: string
+                          format: date-time
+                          example: "2024-08-24T08:50:15Z"
+                        updated_at:
+                          type: string
+                          format: date-time
+                          example: "2024-08-24T08:50:15Z"
+                required:
+                  - total_bids
+                  - total_pages
+                  - current_page
+                  - page_size
+                  - autobids
+        '500':
+          description: Internal server error
+
+    put:
+      summary: Update auto-bid settings
+      description: Update the auto-bid settings for a specific user and item.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: integer
+                  example: 1
+                item:
+                  type: integer
+                  example: 1
+                max_bid_amount:
+                  type: string
+                  example: "1000.00"
+                current_auto_bid_amount:
+                  type: string
+                  example: "0.00"
+                remaining_bid_amount:
+                  type: string
+                  example: "0.00"
+                auto_bid_alert_percentage:
+                  type: integer
+                  example: 90
+                auto_bidding_active:
+                  type: boolean
+                  example: false
+              required:
+                - user
+                - item
+                - max_bid_amount
+                - auto_bid_alert_percentage
+                - auto_bidding_active
+      responses:
+        '200':
+          description: Successful update of auto-bid settings
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  user:
+                    type: integer
+                    example: 1
+                  item:
+                    type: integer
+                    example: 1
+                  max_bid_amount:
+                    type: string
+                    example: "1000.00"
+                  current_auto_bid_amount:
+                    type: string
+                    example: "0.00"
+                  remaining_bid_amount:
+                    type: string
+                    example: "0.00"
+                  auto_bid_alert_percentage:
+                    type: integer
+                    example: 90
+                  auto_bidding_active:
+                    type: boolean
+                    example: false
+                  created_at:
+                    type: string
+                    format: date-time
+                    example: "2024-08-24T08:50:15Z"
+                  updated_at:
+                    type: string
+                    format: date-time
+                    example: "2024-08-24T08:50:15Z"
+                required:
+                  - id
+                  - user
+                  - item
+                  - max_bid_amount
+                  - current_auto_bid_amount
+                  - remaining_bid_amount
+                  - auto_bid_alert_percentage
+                  - auto_bidding_active
+                  - created_at
+                  - updated_at
+        '400':
+          description: Bad request, invalid input
+        '500':
+          description: Internal server error
+  /api/autobid/{id}:
+    get:
+      summary: Retrieve auto-bid settings for a specific ID
+      description: Fetch the auto-bid settings for a specific user and item identified by ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Successful retrieval of auto-bid settings
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  user:
+                    type: integer
+                    example: 1
+                  item:
+                    type: integer
+                    example: 1
+                  max_bid_amount:
+                    type: string
+                    example: "1000.00"
+                  current_auto_bid_amount:
+                    type: string
+                    example: "0.00"
+                  remaining_bid_amount:
+                    type: string
+                    example: "0.00"
+                  auto_bid_alert_percentage:
+                    type: integer
+                    example: 90
+                  auto_bidding_active:
+                    type: boolean
+                    example: false
+                  created_at:
+                    type: string
+                    format: date-time
+                    example: "2024-08-24T08:50:15Z"
+                  updated_at:
+                    type: string
+                    format: date-time
+                    example: "2024-08-24T08:50:15Z"
+                required:
+                  - id
+                  - user
+                  - item
+                  - max_bid_amount
+                  - current_auto_bid_amount
+                  - remaining_bid_amount
+                  - auto_bid_alert_percentage
+                  - auto_bidding_active
+                  - created_at
+                  - updated_at
+        '404':
+          description: Auto-bid entry not found
+        '500':
+          description: Internal server error
+
+    put:
+      summary: Update auto-bid settings for a specific ID
+      description: Update the auto-bid settings for a specific user and item identified by ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: integer
+                  example: 1
+                item:
+                  type: integer
+                  example: 1
+                max_bid_amount:
+                  type: string
+                  example: "1000.00"
+                current_auto_bid_amount:
+                  type: string
+                  example: "0.00"
+                remaining_bid_amount:
+                  type: string
+                  example: "0.00"
+                auto_bid_alert_percentage:
+                  type: integer
+                  example: 90
+                auto_bidding_active:
+                  type: boolean
+                  example: false
+              required:
+                - user
+                - item
+                - max_bid_amount
+                - auto_bid_alert_percentage
+                - auto_bidding_active
+      responses:
+        '200':
+          description: Successful update of auto-bid settings
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  user:
+                    type: integer
+                    example: 1
+                  item:
+                    type: integer
+                    example: 1
+                  max_bid_amount:
+                    type: string
+                    example: "1000.00"
+                  current_auto_bid_amount:
+                    type: string
+                    example: "0.00"
+                  remaining_bid_amount:
+                    type: string
+                    example: "0.00"
+                  auto_bid_alert_percentage:
+                    type: integer
+                    example: 90
+                  auto_bidding_active:
+                    type: boolean
+                    example: false
+                  created_at:
+                    type: string
+                    format: date-time
+                    example: "2024-08-24T08:50:15Z"
+                  updated_at:
+                    type: string
+                    format: date-time
+                    example: "2024-08-24T08:50:15Z"
+                required:
+                  - id
+                  - user
+                  - item
+                  - max_bid_amount
+                  - current_auto_bid_amount
+                  - remaining_bid_amount
+                  - auto_bid_alert_percentage
+                  - auto_bidding_active
+                  - created_at
+                  - updated_at
+        '400':
+          description: Bad request, invalid input
+        '404':
+          description: Auto-bid entry not found
+        '500':
+          description: Internal server error
+  /api/autobid/toggle:
+    post:
+      summary: Toggle auto-bidding status
+      description: Toggles the auto-bidding status for a specific auto-bid entry. If auto-bidding is currently active, it will be deactivated, and vice versa.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  description: ID of the auto-bid entry to toggle.
+                  example: 1
+                auto_bidding_active:
+                  type: boolean
+                  description: New status of auto-bidding (true to activate, false to deactivate).
+                  example: false
+              required:
+                - id
+                - auto_bidding_active
+      responses:
+        '200':
+          description: Successful toggle of auto-bidding status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Auto-bidding status updated successfully"
+        '400':
+          description: Bad request, invalid input
+        '404':
+          description: Auto-bid entry not found
+        '500':
+          description: Internal server error
+  /api/bill/{id}:
+    get:
+      summary: Get bills by user ID
+      description: Retrieves a list of bills associated with the specified user ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the user for whom to retrieve the bills.
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Successful retrieval of bills
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_bills:
+                    type: integer
+                    description: Total number of bills
+                    example: 2
+                  bills:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: ID of the bill
+                          example: 1
+                        amount:
+                          type: string
+                          description: Amount of the bill
+                          example: "100.00"
+                        date:
+                          type: string
+                          format: date-time
+                          description: Date and time when the bill was generated
+                          example: "2024-08-24T08:50:15Z"
+                        description:
+                          type: string
+                          description: Description of the bill
+                          example: "Invoice for auction item"
+                required:
+                  - total_bills
+                  - bills
+        '404':
+          description: User ID not found or no bills found for the given user ID
+        '500':
+          description: Internal server error
+  /api/user/{id}/bid:
+    get:
+      summary: Get items by user ID
+      description: Retrieves a list of items associated with the bids made by the specified user ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the user for whom to retrieve the items.
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Successful retrieval of items associated with user bids
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_items:
+                    type: integer
+                    description: Total number of items associated with the user's bids
+                    example: 3
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: ID of the item
+                          example: 1
+                        name:
+                          type: string
+                          description: Name of the item
+                          example: "Vintage Lamp"
+                        description:
+                          type: string
+                          description: Description of the item
+                          example: "A rare vintage lamp from the 1950s."
+                        small_image:
+                          type: string
+                          description: URL for the small image of the item
+                          example: "http://example.com/small_image.jpg"
+                        large_image:
+                          type: string
+                          description: URL for the large image of the item
+                          example: "http://example.com/large_image.jpg"
+                        starting_price:
+                          type: string
+                          description: Starting price of the item
+                          example: "250.00"
+                        expiry_time:
+                          type: string
+                          format: date-time
+                          description: Expiry date and time of the item
+                          example: "2024-11-30T23:59:59Z"
+                        start_time:
+                          type: string
+                          format: date-time
+                          description: Start date and time of the item
+                          example: "2024-09-01T12:00:00Z"
+                        is_closed:
+                          type: boolean
+                          description: Indicates if the item is closed
+                          example: false
+                required:
+                  - total_items
+                  - items
+        '404':
+          description: User ID not found or no bids found for the given user ID
+        '500':
+          description: Internal server error

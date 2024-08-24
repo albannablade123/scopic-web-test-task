@@ -2,6 +2,8 @@ from django.shortcuts import render
 from rest_framework.request import Request
 from rest_framework.decorators import api_view
 
+from .api.user.update_email import update_user_email
+
 from .api.item.create import create_item_handler
 from .api.item.delete import delete_item_handler
 from .api.item.get_list import get_item_list_handler
@@ -129,3 +131,7 @@ def get_bill_by_item(request: Request, id):
     if request.method == 'GET':
         return get_bill_by_item_list_handler(request, id)
 
+@api_view(['POST'])
+def update_email_view(request: Request, id):
+    if request.method == "POST":
+        return update_user_email(request, id)

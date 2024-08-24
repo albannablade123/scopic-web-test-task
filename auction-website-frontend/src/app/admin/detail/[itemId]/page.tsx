@@ -1,5 +1,5 @@
 "use client";
-import CountdownTimer from "@/app/components/countdownTimer";
+import CountdownTimer, { parseDateString } from "@/app/components/countdownTimer";
 import { ItemService } from "@/app/utils/actions/ItemService";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -14,6 +14,7 @@ interface Item {
   name: String;
   description: String;
   expiry_time: String;
+  start_time: String;
   image_large: String;
   starting_price: String;
 }
@@ -33,6 +34,7 @@ const initialItemDetail: Item = {
   name: "",
   description: "",
   expiry_time: "",
+  start_time: "",
   image_large: "",
   starting_price: "",
 };
@@ -46,6 +48,7 @@ export default function Items() {
   const [loading, setLoading] = useState(false);
   const [itemDetail, setItemDetail] = useState<Item>(initialItemDetail);
   const [bids, setBids] = useState<Bid[]>([]);
+  const [isOpen, setIsOpen] = useState(false)
 
   const [userId, setUserId] = useState("");
 
@@ -56,13 +59,16 @@ export default function Items() {
   const [amount, setAmount] = useState("");
 
   useEffect(() => {
+    
     const getUserId = async () => {
       const response = await fetch("http://localhost:8000/api/user", {
         credentials: "include",
       });
-
+      
+      
+      
       const content = await response.json();
-
+      
       if (content.id) {
         // User is authenticated and logged out
         setUserId(content.id);
@@ -73,12 +79,17 @@ export default function Items() {
         const itemDetail = (await itemService.getItemById(itemId)) as Item;
         console.log("Fetched item detail:", itemDetail);
         setItemDetail(itemDetail);
+        const start = parseDateString(itemDetail.start_time.toString());
+        const now = new Date();
+        if (now < start) {setIsOpen(now<start)}
+
+
       } catch (error) {
         setError("Failed to fetch item details");
         console.error("Error fetching item:", error);
       }
     };
-
+    
     const fetchBids = async (itemId: number) => {
       try {
         const bids = await itemService.getAllBidsByItemId(itemId, 10, 10);
@@ -220,7 +231,7 @@ export default function Items() {
           <h3 className=" font-small text-slate-900">Time Left</h3>
           <Horizontal />
           {itemDetail.expiry_time && (
-            <CountdownTimer time={itemDetail.expiry_time} />
+            <CountdownTimer time={itemDetail.expiry_time.toString()} start_time={itemDetail.start_time.toString()} />
           )}
           <h3 className=" font-small text-slate-900 mt-6">Bids</h3>
           <Horizontal />

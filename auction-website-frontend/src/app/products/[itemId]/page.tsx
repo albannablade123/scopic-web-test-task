@@ -1,5 +1,5 @@
 "use client";
-import CountdownTimer from "@/app/components/countdownTimer";
+import CountdownTimer, { parseDateString } from "@/app/components/countdownTimer";
 import { ItemService } from "@/app/utils/actions/ItemService";
 import { useSearchParams } from "next/navigation";
 import { ChangeEvent, useEffect, useState } from "react";
@@ -17,6 +17,7 @@ interface Item {
   id: String;
   name: String;
   description: String;
+  start_time: String;
   expiry_time: String;
   image_large: String;
   starting_price: String;
@@ -26,6 +27,7 @@ const initialItemDetail: Item = {
   id: "",
   name: "",
   description: "",
+  start_time: "",
   expiry_time: "",
   image_large: "",
   starting_price: "",
@@ -53,6 +55,7 @@ export default function Items() {
   const [userId, setUserId] = useState("");
   const [bids, setBids] = useState<Bid[]>([]);
   const [isExpired, setIsExpired] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const searchParams = useSearchParams();
   const itemIdString = searchParams.get("id");
@@ -64,10 +67,11 @@ export default function Items() {
   useEffect(() => {
     const expiryTime = new Date(itemDetail?.expiry_time.toString());
     const now = new Date();
-    console.log(expiryTime, now);
+    // console.log(expiryTime, now);
 
     // Check if the current time is after the expiry time
     if (now > expiryTime) {
+      console.log(now>expiryTime)
       setIsExpired(true);
     }
     const getUserId = async () => {
@@ -99,7 +103,7 @@ export default function Items() {
               typeof bid.amount === "string"
                 ? parseFloat(bid.amount)
                 : bid.amount;
-      
+
             return accAmount > bidAmount ? acc : bid;
           });
 
@@ -123,6 +127,11 @@ export default function Items() {
       try {
         const itemDetail = (await itemService.getItemById(itemId)) as Item;
         setItemDetail(itemDetail);
+        const start = parseDateString(itemDetail.start_time.toString());
+        const now = new Date();
+        if (now >= start) {
+          setIsOpen(true);
+        }
       } catch (error) {
         setError("Failed to fetch item details");
         console.error("Error fetching item:", error);
@@ -317,38 +326,7 @@ export default function Items() {
           )}
           onLoad={() => setLoading(false)}
         />
-        <div>
-          <h2>Bid History</h2>
-          <div className="max-h-48 overflow-y-auto">
-            {bids.length === 0 ? (
-              <div className="text-center text-gray-500 p-4">
-                <p>No bids have been placed yet.</p>
-              </div>
-            ) : (
-              sortedBids.map((bid, index) => (
-                <div
-                  key={index}
-                  className="bg-white p-4 rounded-lg shadow-md mb-4"
-                >
-                  <h3 className="text-lg font-semibold text-gray-800">
-                    Amount:{" "}
-                    <span className="text-green-600">${bid.amount}</span>
-                  </h3>
-                  <div className="flex justify-between text-gray-600">
-                    <p>User ID: {bid.user}</p>
-                    <p>Created: {new Date(bid.timestamp).toLocaleString()}</p>
-                  </div>
-                  <p className="text-gray-600">
-                    Is Auto Bid:{" "}
-                    <span className="text-blue-600">
-                      {bid.auto_bidding ? "True" : "False"}
-                    </span>
-                  </p>
-                </div>
-              ))
-            )}
-          </div>
-        </div>
+
       </div>
       <div className="mx-10">
         <div className="flex flex-col gap-1 text-slate-500 text-sm">
@@ -364,7 +342,10 @@ export default function Items() {
           <h3 className=" font-small text-slate-900">Time Left</h3>
           <Horizontal />
           {itemDetail.expiry_time && (
-            <CountdownTimer time={itemDetail.expiry_time} />
+            <CountdownTimer
+              time={itemDetail.expiry_time.toString()}
+              start_time={itemDetail.start_time.toString()}
+            />
           )}
           <h3 className=" font-small text-slate-900 mt-6">Bids</h3>
           <Horizontal />
@@ -372,7 +353,10 @@ export default function Items() {
             <div className="mt-3 mb-3 ">
               <div className="grid grid-cols-2 gap-4 ">
                 <div className=" grid grid-row-2 text-right p-3 ">
-                  <BidComponent highestBid={highestBid || defaultBid} userId={parseFloat(userId)} />
+                  <BidComponent
+                    highestBid={highestBid || defaultBid}
+                    userId={parseFloat(userId)}
+                  />
                 </div>
                 <div className="mt-4 ">
                   <form onSubmit={handleSubmit}>
@@ -385,6 +369,7 @@ export default function Items() {
                       required
                     />
                     <button
+                      disabled={!isOpen}
                       type="submit"
                       className="px-4 py-2 bg-beige-dark text-white rounded-lg hover:bg-beige ml-2"
                     >
@@ -396,7 +381,10 @@ export default function Items() {
             </div>
           ) : (
             <div className=" grid grid-row-2 text-right p-3 ">
-              <BidComponent  highestBid={highestBid || defaultBid}  userId={parseFloat(userId)} />
+              <BidComponent
+                highestBid={highestBid || defaultBid}
+                userId={parseFloat(userId)}
+              />
             </div>
           )}
 

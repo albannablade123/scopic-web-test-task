@@ -12,6 +12,7 @@ interface UserDetails {
   id: number;
   username: string;
   is_admin: boolean;
+  notification_email: string;
 }
 
 export default function Profile() {
@@ -35,7 +36,6 @@ export default function Profile() {
       });
 
       const content = await response.json();
-      console.log("RRRRRRR", content);
       if (content.id) {
         // User is authenticated and logged out
         setUserDetails(content);
@@ -43,14 +43,15 @@ export default function Profile() {
     };
 
     getUserDetail();
-    console.log(userDetails);
+    console.log(userDetails)
+    console.log(userDetails?.username);
   }, []);
 
   return (
     <div className="w-full h-full">
       <div className="grid grid-cols-4 gap-4 w-full">
         <div className="bg-beige h-full">
-          <UserCard username={userDetails?.username || "Guest"} />
+          <UserCard username={userDetails?.username || "Guest"} notification_email={userDetails?.notification_email || "X"} id={safeUserId}/>
         </div>
         <div className=" h-full col-span-3 p-2 mt-8">
           <Tabs aria-label="Options mt-2">

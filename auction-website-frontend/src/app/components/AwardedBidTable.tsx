@@ -41,7 +41,7 @@ export default function AwardedBidTable({userId}: BidTableProps) {
     return filteredListings;
   }, [convertedBid, filterValue, hasSearchFilter]);
 
-  console.log("TEST", filteredBid);
+  // console.log("TEST", filteredBid);
   // const [page, setPage] = useState(1);
   // const rowsPerPage = 10;
 
@@ -94,8 +94,6 @@ export default function AwardedBidTable({userId}: BidTableProps) {
     setFilterValue("");
     //   setPage(1);
   }, []);
-
-  console.log(fetchBid);
 
   return (
     <Table
