@@ -60,8 +60,8 @@
       "fields": {
         "name": "Classic Guitar",
         "description": "A classic guitar used by a famous musician.",
-        "expiry_time": "2024-11-05T21:30:00Z",
-        "start_time": "2024-09-20T16:00:00Z",
+        "expiry_time": "2024-09-18T21:30:00Z",
+        "start_time": "2024-08-24T16:00:00Z",
         "starting_price": "1250"
       }
     },
@@ -82,8 +82,8 @@
       "fields": {
         "name": "Vintage Camera",
         "description": "A vintage camera in perfect working condition.",
-        "expiry_time": "2024-12-15T19:45:00Z",
-        "start_time": "2024-10-01T14:00:00Z",
+        "expiry_time": "2024-09-18T21:30:00Z",
+        "start_time": "2024-08-24T16:00:00Z",
         "starting_price": "300"
       }
     },
