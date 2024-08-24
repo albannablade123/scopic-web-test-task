@@ -18,6 +18,15 @@ The application is built using Django for the backend and Next.js for the fronte
 - **Next.js**: React framework for building server-side rendered applications.
 - **Other dependencies**: As listed in `package.json`.
 
+### OpenAPI specificiation
+REST API specification of the backend can be viewed through OpenAPI with Swagger UI, either locally or through importing the openapi.yaml file on swagger editor at https://editor.swagger.io/ 
+
+### SMTP settings
+This project utilizes Django gmail SMTP, thus a new email hasantest304@gmail.com is created to send email notifications and configuration can be found in auction_web_api/auction_web_api/settings.py
+
+### Note on Database
+Due to limitation of sqlite that prevents multiple containers to access the database, the db.sqlite3 is included in the repository, and is required for the application to function properly. Thus when cloning the repository, ensure that the db.sqlite3 is included. 
+
 ## Running the Application 
 
 ### Cloning the repository
