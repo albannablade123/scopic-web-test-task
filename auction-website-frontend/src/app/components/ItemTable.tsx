@@ -10,7 +10,7 @@ import {
   getKeyValue,
 } from "@nextui-org/table";
 import { columns, Item, renderCell } from "../admin/column";
-import { useState, useMemo, useCallback, useEffect } from "react";
+import { useState, useMemo, useCallback, useEffect, Key } from "react";
 import { Input, Pagination } from "@nextui-org/react";
 import { SearchIcon } from "./icons";
 import { ItemService } from "../utils/actions/ItemService";
@@ -23,7 +23,7 @@ export default function ItemTable() {
 
   const fetchItems = async () => {
     const fetchedItems = await itemService.getAllItemActions();
-    console.log("Fetched fetchedItems:", fetchedItems); // Print fetchedItems to the console
+    // console.log("Fetched fetchedItems:", fetchedItems); // Print fetchedItems to the console
     setConvertedItems(fetchedItems);
   };
 
@@ -127,7 +127,7 @@ export default function ItemTable() {
       </TableHeader>
       <TableBody items={sortedItems} emptyContent={"No users to display"}>
         {(item) => (
-          <TableRow key={item.key}>
+          <TableRow key={item.id as Key}>
             {(columnKey) => (
               <TableCell className="max-w-xs truncate">
                 {renderCell(item, columnKey, fetchItems)}

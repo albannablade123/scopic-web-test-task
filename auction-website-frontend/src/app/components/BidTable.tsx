@@ -15,14 +15,18 @@ import { SearchIcon } from "./icons";
 import { BidService } from "../utils/actions/BidService";
 import BillModal from "./BillModal";
 
-export default function BidTable() {
+interface BidTableProps {
+  userId: number;
+}
+
+export default function BidTable({userId}: BidTableProps) {
   const bidService = new BidService();
   const [filterValue, setFilterValue] = useState("");
   const hasSearchFilter = Boolean(filterValue);
   const [convertedBid, setConvertedBid] = useState<Bid[]>([]);
 
   const fetchBid = async () => {
-    const fetchedBid = await bidService.getAllBidsByUserId(1);
+    const fetchedBid = await bidService.getAllBidsByUserId(userId);
     // console.log("Fetched fetchedBid:", fetchedBid); // Print fetchedBid to the console
     setConvertedBid(fetchedBid);
   };

@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { Key, useCallback, useEffect, useMemo, useState } from "react";
 import { ItemService } from "../utils/actions/ItemService";
 import { Input, Pagination } from "@nextui-org/react";
 import Link from "next/link";
@@ -101,7 +101,7 @@ export default function Home() {
     }));
   };
 
-  const sortedItems = useMemo(() => {
+  const sortedItems: Item[] = useMemo(() => {
     if (filteredItems == null) {
       return [];
     }
@@ -229,7 +229,7 @@ export default function Home() {
           {sortedItems.length === 0 ? (
             <div>No items available</div>
           ) : (
-            pageItems.map((item) => <ItemCard key={item.id} item={item} />)
+            pageItems.map((item) => <ItemCard key={item.id as Key} item={item} />)
           )}
         </div>
         <div className="flex mt-10">
@@ -255,14 +255,14 @@ interface ItemCardProps {
 
 const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
   const [isLoading, setLoading] = useState(true);
-  const expiryDate = new Date(item.expiry_time);
+  const expiryDate = new Date(item.expiry_time.toString());
   const formattedExpiryDate = expiryDate.toLocaleString();
   return (
     <div className="shadow-sm p-3">
       <div className="aspect-w-1 aspect-h-2 bg-red-200 w-full rounded-lg overflow-hidden xl:aspect-w-7 xl:aspect-h-9 ">
         <Image
           alt=""
-          src={item?.image_large || "/images.png"}
+          src={(item?.image_large as string) || "/images.png"}
           width={500}
           height={500}
           objectFit="cover"
@@ -276,7 +276,7 @@ const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
         />
       </div>
       <h3 className="mt-4 text-sm text-gray-700">
-        {new Date(item.expiry_time).toLocaleString()}
+        {new Date(item.expiry_time.toString()).toLocaleString()}
       </h3>
       <p className="mt-1 text-lg font-medium text-gray-900">{item.name}</p>
       <p>Starts at: {item.starting_price}</p>
@@ -287,7 +287,7 @@ const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
               pathname: `/products/${item.id}`,
               query: {
                 search: "search",
-                id: item.id,
+                id: item.id.toString(),
               },
             }}
           >

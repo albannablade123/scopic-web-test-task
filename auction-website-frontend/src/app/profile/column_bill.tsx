@@ -1,4 +1,5 @@
 export type Bill = {
+    id: number;
     user: number;
     item: number;
     amount: number;

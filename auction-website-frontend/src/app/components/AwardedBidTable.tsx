@@ -14,14 +14,18 @@ import { ItemService } from "../utils/actions/ItemService";
 import { SearchIcon } from "./icons";
 import { BidService } from "../utils/actions/BidService";
 
-export default function BidTable() {
+interface BidTableProps {
+  userId: number;
+}
+
+export default function AwardedBidTable({userId}: BidTableProps) {
   const bidService = new BidService();
   const [filterValue, setFilterValue] = useState("");
   const hasSearchFilter = Boolean(filterValue);
   const [convertedBid, setConvertedBid] = useState<Bid[]>([]);
 
   const fetchBid = async () => {
-    const fetchedBid = await bidService.getAllBidsByUserId(1);
+    const fetchedBid = await bidService.getAllBidsByUserId(userId);
     setConvertedBid(fetchedBid);
   };
 
@@ -29,18 +33,15 @@ export default function BidTable() {
     fetchBid();
   }, []);
 
-  // const filteredBid = useMemo(() => {
-  //   let filteredListings = [...convertedBid];
+  const filteredBid = useMemo(() => {
+    let filteredListings = [...convertedBid];
 
-  //   if (hasSearchFilter) {
-  //     filteredListings = filteredListings.filter((bid) =>
-  //       bid.name.toLowerCase().includes(filterValue.toLowerCase())
-  //     );
-  //   }
+    filteredListings = filteredListings.filter((item) => item.winner == 1);
 
-  //   return filteredListings;
-  // }, [convertedBid, filterValue, hasSearchFilter]);
+    return filteredListings;
+  }, [convertedBid, filterValue, hasSearchFilter]);
 
+  console.log("TEST", filteredBid);
   // const [page, setPage] = useState(1);
   // const rowsPerPage = 10;
 
@@ -80,14 +81,14 @@ export default function BidTable() {
   const [page, setPage] = useState(1);
   const rowsPerPage = 10;
 
-  const pages = Math.ceil(convertedBid.length / rowsPerPage);
+  const pages = Math.ceil(filteredBid.length / rowsPerPage);
 
-  const pageBill = useMemo(() => {
+  const pageBid = useMemo(() => {
     const start = (page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
 
-    return convertedBid.slice(start, end);
-  }, [page, convertedBid]);
+    return filteredBid.slice(start, end);
+  }, [page, filteredBid]);
 
   const onClear = useCallback(() => {
     setFilterValue("");
@@ -119,8 +120,7 @@ export default function BidTable() {
       <TableHeader columns={columns}>
         {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
       </TableHeader>
-      <TableBody items={convertedBid} emptyContent={"No bid to display"}>
-        
+      <TableBody items={pageBid} emptyContent={"No bid to display"}>
         {(bid) => (
           <TableRow key={bid.id}>
             {(columnKey) => (

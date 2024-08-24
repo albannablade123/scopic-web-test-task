@@ -15,7 +15,7 @@ export default function ItemAction(props: any) {
   };
 
   const handleConfirmDelete = async (
-    e: MouseEventHandler<HTMLButtonElement>
+    e:  React.MouseEvent<HTMLButtonElement>
   ) => {
     const response = await itemService.deleteItem(props.id);
     console.log(response);

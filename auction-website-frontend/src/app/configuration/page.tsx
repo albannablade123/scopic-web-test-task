@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { FormEvent, Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 const AutoBidConfig = () => {
@@ -43,7 +43,7 @@ const AutoBidConfig = () => {
     fetchConfig();
   }, [userId]);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (alertPercentage > 100) {
@@ -133,8 +133,8 @@ const AutoBidConfig = () => {
             type="number"
             id="auto_bid_alert_percentage"
             value={alertPercentage}
-            onChange={(e) => setAlertPercentage(e.target.value)}
-            className="h-4 w-4 mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm py-3 px-4"
+            onChange={(e) => setAlertPercentage(parseFloat(e.target.value))}
+            className="h-4 w-4 mt-1 block border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm py-3 px-4"
             required
           />
         </div>
@@ -149,4 +149,10 @@ const AutoBidConfig = () => {
   );
 };
 
-export default AutoBidConfig;
+export default function ConfigurationPageWrapper() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <AutoBidConfig />
+    </Suspense>
+  );
+}

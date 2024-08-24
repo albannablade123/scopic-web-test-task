@@ -55,6 +55,17 @@ services:
   redis:
     image: redis:7-alpine
 
+  auction-frontend:
+    build:
+      context: ./auction-website-frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"  # Maps port 3000 on the host to port 3000 in the container
+    volumes:
+      - .:/app  # Mounts the current directory to /app in the container for live reloading (optional)
+    environment:
+      - NODE_ENV=production  # Set environment variables if needed
+
 volumes:
   static:
   sqlite-data:  # Define the volume for SQLite database

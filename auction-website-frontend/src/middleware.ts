@@ -1,17 +1,17 @@
 import { cookies } from "next/headers";
 import { NextResponse, type NextRequest } from "next/server";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 
 export function middleware(request: NextRequest) {
   const token = request.cookies.get("jwt")?.value;
   if (token) {
     try {
       // Decode the JWT token to get the payload
-      const decoded = jwt.decode(token)
+      const decoded = jwt.decode(token) as JwtPayload & { isAdmin: boolean } | null;
       // const decoded = jwt.verify(token, JWT_SECRET) as { isAdmin: boolean };
       
       // Check if the user is an admin and the path does not start with '/admin'
-      if (decoded.isAdmin) {
+      if (decoded != null && decoded.isAdmin) {
         // Allow admin users to access any path
         return NextResponse.next();
       }

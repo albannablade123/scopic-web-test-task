@@ -18,7 +18,7 @@ class ItemSerializer(serializers.ModelSerializer):
     class Meta:
         ordering = ['-id']
         model = Item
-        fields = ['id', 'name', 'description', 'small_image', 'large_image', 'starting_price', 'expiry_time', 'start_time','bids', 'is_closed','latest_bid_status','highest_bid_amount']
+        fields = ['id', 'name', 'description', 'small_image', 'large_image', 'starting_price', 'expiry_time', 'start_time','bids', 'is_closed','latest_bid_status','highest_bid_amount','winner']
         extra_kwargs = {
             'smallImage': {'required': False, 'allow_blank': True},
             'large_image': {'required': False, 'allow_blank': True},

@@ -1,6 +1,22 @@
 import React from "react";
 
-const NotificationsDropdown = ({ notifications, isOpen, onClose }) => {
+interface Notification {
+  id: number;
+  message: string;
+  // Add more fields as necessary
+}
+
+interface NotificationsDropdownProps {
+  notifications: Notification[];
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({
+  notifications,
+  isOpen,
+  onClose,
+}) => {
   return (
     <div
       style={{ top: "2rem" }}
@@ -14,16 +30,16 @@ const NotificationsDropdown = ({ notifications, isOpen, onClose }) => {
             <li
               key={notif.id}
               style={{
-                display: '-webkit-box',
-                WebkitBoxOrient: 'vertical',
+                display: "-webkit-box",
+                WebkitBoxOrient: "vertical",
                 WebkitLineClamp: 2,
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                maxWidth: '346px',
-                lineHeight: '1.5em',
-                height: '4.7em',
-                textAlign: 'left',
-            }}
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                maxWidth: "346px",
+                lineHeight: "1.5em",
+                height: "4.7em",
+                textAlign: "left",
+              }}
               className="p-2 border-b last:border-b-0 mb-2"
             >
               {notif.message}

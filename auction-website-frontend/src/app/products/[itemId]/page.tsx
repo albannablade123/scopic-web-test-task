@@ -2,11 +2,12 @@
 import CountdownTimer from "@/app/components/countdownTimer";
 import { ItemService } from "@/app/utils/actions/ItemService";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import Image from "next/image";
 import BidComponent from "@/app/components/BidComponent";
 import BidTable from "@/app/components/BidTable";
 import BillTable from "@/app/components/BillTable";
+import { Bid } from "@/app/profile/column_awarded";
 
 const Horizontal = () => {
   return <hr className="w-[30% my-2]" />;
@@ -30,6 +31,11 @@ const initialItemDetail: Item = {
   starting_price: "",
 };
 
+export interface HighestBid {
+  amount: number;
+  userId: string | null; // Adjust this type based on your needs
+}
+
 function cn(...clasess: string[]) {
   return clasess.filter(Boolean).join(" ");
 }
@@ -43,9 +49,9 @@ export default function Items() {
   const [configExist, setConfigExist] = useState(false);
   const [autoBidActive, setAutoBidActive] = useState(false);
   const [autoBidStatus, setAutoBidStatus] = useState(false);
-  const [highestBid, setHighestBid] = useState({});
+  const [highestBid, setHighestBid] = useState<HighestBid>();
   const [userId, setUserId] = useState("");
-  const [bids, setBids] = useState([]);
+  const [bids, setBids] = useState<Bid[]>([]);
   const [isExpired, setIsExpired] = useState(false);
 
   const searchParams = useSearchParams();
@@ -53,9 +59,10 @@ export default function Items() {
   const itemId = itemIdString ? Number(itemIdString) : null;
 
   const [amount, setAmount] = useState("");
+  const defaultBid: HighestBid = { amount: 0, userId: null };
 
   useEffect(() => {
-    const expiryTime = new Date(itemDetail?.expiry_time);
+    const expiryTime = new Date(itemDetail?.expiry_time.toString());
     const now = new Date();
     console.log(expiryTime, now);
 
@@ -82,22 +89,27 @@ export default function Items() {
         // console.log("Fetched bids:", bids);
         if (bids.length > 0) {
           setBids(bids);
-          const bid = bids.reduce((acc, bid) => {
+          const bid = bids.reduce((acc: Bid, bid: Bid) => {
             // Convert amount to numbers if they are strings
-            const accAmount = typeof acc.amount === 'string' ? parseFloat(acc.amount) : acc.amount;
-            const bidAmount = typeof bid.amount === 'string' ? parseFloat(bid.amount) : bid.amount;
-          
+            const accAmount =
+              typeof acc.amount === "string"
+                ? parseFloat(acc.amount)
+                : acc.amount;
+            const bidAmount =
+              typeof bid.amount === "string"
+                ? parseFloat(bid.amount)
+                : bid.amount;
+      
             return accAmount > bidAmount ? acc : bid;
           });
-          
 
           setHighestBid({
             amount: bid.amount,
-            userId: bid.user,
+            userId: bid.user.toString(),
           });
         } else {
           setHighestBid({
-            amount: itemDetail.starting_price,
+            amount: parseFloat(itemDetail.starting_price.toString()),
             userId: null,
           });
         }
@@ -182,7 +194,7 @@ export default function Items() {
     getUserId();
   }, [itemId, userId, itemDetail.expiry_time]);
 
-  const handleCheckboxChange = async (e) => {
+  const handleCheckboxChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const isChecked = e.target.checked;
     if (!configExist) {
       alert("No configuration for auto-bid found");
@@ -242,7 +254,7 @@ export default function Items() {
     }
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: React.SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const timestamp = new Date().toISOString();
@@ -282,16 +294,18 @@ export default function Items() {
     }
   };
 
-  const sortedBids = bids.sort(
-    (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
-  );
+  const sortedBids = bids.sort((a, b) => {
+    const dateA = new Date(a.timestamp); // Assuming timestamp is a valid ISO string
+    const dateB = new Date(b.timestamp); // Assuming timestamp is a valid ISO string
+    return dateB.getTime() - dateA.getTime(); // Use getTime() for comparison
+  });
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-12  p-6 mt-10 px-10 mx-10">
       <div>
         <Image
           alt=""
-          src={itemDetail.image_large || "/images.png"}
+          src={(itemDetail?.image_large as string) || "/images.png"}
           width={500}
           height={500}
           objectFit="cover"
@@ -358,7 +372,7 @@ export default function Items() {
             <div className="mt-3 mb-3 ">
               <div className="grid grid-cols-2 gap-4 ">
                 <div className=" grid grid-row-2 text-right p-3 ">
-                  <BidComponent highestBid={highestBid} userId={userId} />
+                  <BidComponent highestBid={highestBid || defaultBid} userId={parseFloat(userId)} />
                 </div>
                 <div className="mt-4 ">
                   <form onSubmit={handleSubmit}>
@@ -382,7 +396,7 @@ export default function Items() {
             </div>
           ) : (
             <div className=" grid grid-row-2 text-right p-3 ">
-              <BidComponent highestBid={highestBid} userId={userId} />
+              <BidComponent  highestBid={highestBid || defaultBid}  userId={parseFloat(userId)} />
             </div>
           )}
 
@@ -414,7 +428,7 @@ export default function Items() {
         </div>
       </div>
       <div className="col-span-2">
-        <BillTable itemId={itemId}/>
+        <BillTable itemId={itemId} />
       </div>
     </div>
   );

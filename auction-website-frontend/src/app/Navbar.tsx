@@ -94,7 +94,7 @@ const Navbar = () => {
             </Link>
             <a
               href="/homepage"
-              className="text-white hover:bg-slate-800 hover: text-black rounded-lg p-2 ml-3"
+              className="text-white hover:bg-slate-800 hover:text-black rounded-lg p-2 ml-3"
             >
               Item List
             </a>

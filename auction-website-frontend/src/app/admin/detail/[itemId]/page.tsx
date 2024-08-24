@@ -18,6 +18,16 @@ interface Item {
   starting_price: String;
 }
 
+interface Bid {
+  id: string;
+  user: number;
+  item: number;
+  amount: string;
+  auto_bidding: boolean;
+  timestamp: string; // or Date if you prefer to handle it as a Date object
+  status: string;
+}
+
 const initialItemDetail: Item = {
   id: "",
   name: "",
@@ -35,7 +45,7 @@ export default function Items() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [itemDetail, setItemDetail] = useState<Item>(initialItemDetail);
-  const [bids, setBids] = useState([]);
+  const [bids, setBids] = useState<Bid[]>([]);
 
   const [userId, setUserId] = useState("");
 
@@ -69,11 +79,9 @@ export default function Items() {
       }
     };
 
-    
-
     const fetchBids = async (itemId: number) => {
       try {
-        const bids = await itemService.getAllBidsByItemId(itemId,10,10);
+        const bids = await itemService.getAllBidsByItemId(itemId, 10, 10);
         setBids(bids);
       } catch (error) {
         setError("Failed to fetch item details");
@@ -96,7 +104,7 @@ export default function Items() {
     getUserId();
   }, [itemId]);
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: React.SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const timestamp = new Date().toISOString();
@@ -139,14 +147,21 @@ export default function Items() {
     }
   };
 
-  const sortedBids = bids.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+  const sortedBids = bids.sort((a, b) => {
+    // Convert timestamps to Date objects
+    const dateA = new Date(a.timestamp);
+    const dateB = new Date(b.timestamp);
 
+    // Calculate difference as a number
+    return dateB.getTime() - dateA.getTime(); // Use getTime() for milliseconds since epoch
+  });
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-12  p-6 mt-10 px-10 mx-10">
       <div>
         <Image
-          src={itemDetail?.image_large || '/images.png'}
+          alt=""
+          src={(itemDetail?.image_large as string) || "/images.png"}
           width={500}
           height={500}
           objectFit="cover"

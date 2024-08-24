@@ -1,12 +1,12 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { parse } from "path";
 import { ItemService } from "@/app/utils/actions/ItemService";
 
-export default function CreateItem(props: any) {
+const UpdateItem = (props: any) => {
   const itemService = new ItemService('http://localhost:8000/api');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false)
@@ -229,5 +229,13 @@ export default function CreateItem(props: any) {
         </div>
       </form>
     </div>
+  );
+}
+
+export default function ConfigurationPageWrapper() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <UpdateItem />
+    </Suspense>
   );
 }

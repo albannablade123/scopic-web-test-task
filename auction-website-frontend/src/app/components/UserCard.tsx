@@ -1,10 +1,14 @@
 "use client";
 import { Card, CardBody, Divider } from "@nextui-org/react";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import Image from "next/image";
-import NotificationSettings from "./NotificationSettings";
+// import NotificationSettings from "./NotificationSettings";
 
-export default function UserCard() {
+interface UserCardProps {
+  username: string;
+}
+
+export default function UserCard({ username }: UserCardProps) {
   const dummyNotificationSettings = {
     newBid: true,
     biddingFinished: false,
@@ -26,7 +30,7 @@ export default function UserCard() {
     getUserId();
   }, []);
 
-  const handleNotificationChange = (event) => {
+  const handleNotificationChange = (event :  ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = event.target;
     setNotifications((prevNotifications) => ({
       ...prevNotifications,
@@ -34,10 +38,11 @@ export default function UserCard() {
     }));
   };
   return (
-    <Card className="max-w-[400px] mx-auto">
+    <Card className="max-w-[400px] mx-auto mt-4">
       <Divider />
       <CardBody className="text-center">
         <Image
+          alt=""
           src={"/profile.png"}
           width={200}
           height={100}
@@ -47,19 +52,19 @@ export default function UserCard() {
         <h3 className="text-left ml-4 font-semibold">User Details</h3>
         <hr className="mb-3" />
 
-        <div>Name: User Name</div>
+        <div>Name: {username}</div>
         <div>Email: test@mail.com</div>
         <div>Date Joined: </div>
 
-        <h3 className="text-left ml-4 mt-3 font-semibold">
+        {/* <h3 className="text-left ml-4 mt-3 font-semibold">
           Notification Settings
-        </h3>
+        </h3> */}
 
         <hr className="mb-2" />
-        <NotificationSettings
+        {/* <NotificationSettings
           notifications={dummyNotificationSettings}
           onChange={handleNotificationChange}
-        />
+        /> */}
       </CardBody>
       <Divider />
     </Card>

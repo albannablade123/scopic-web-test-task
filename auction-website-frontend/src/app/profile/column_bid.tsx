@@ -1,6 +1,7 @@
 import { Button } from "@nextui-org/react";
 
 export type Bid = {
+  id: string;
   user: number;
   item: number;
   amount: string;

@@ -15,22 +15,26 @@ import { SearchIcon } from "./icons";
 import { BillService } from "../utils/actions/BillService";
 import { BidService } from "../utils/actions/BidService";
 
-export default function BillTable({ itemId }) {
+interface BillTableProps {
+  itemId: number | null; // Adjust the type if itemId should be a different type (e.g., string)
+}
+export default function BillTable({ itemId }: BillTableProps) {
   const itemService = new ItemService("http://localhost:8000/api");
   const [filterValue, setFilterValue] = useState("");
   const hasSearchFilter = Boolean(filterValue);
   const [convertedBill, setConvertedBill] = useState<Bill[]>([]);
 
   const fetchBill = async () => {
-    const fetchedBill = await itemService.getAllBidsByItemId(itemId);
-    console.log(itemId);
-    setConvertedBill(fetchedBill);
+    if (itemId != null) {
+      const fetchedBill = await itemService.getAllBidsByItemId(itemId);
+      console.log(itemId);
+      setConvertedBill(fetchedBill);
+    }
   };
 
   useEffect(() => {
     fetchBill();
   }, []);
-
 
   useEffect(() => {
     const socketUrl = `ws://localhost:8000/bid/${itemId}/`;
@@ -42,8 +46,6 @@ export default function BillTable({ itemId }) {
 
     socket.onmessage = (event) => {
       const newBid = JSON.parse(event.data);
-      console.log(newBid)
-      console.log("RESSSSS")
       setConvertedBill((prevBids) => [newBid, ...prevBids]); // Prepend new bid
     };
 
@@ -111,7 +113,6 @@ export default function BillTable({ itemId }) {
     setPage(1);
   }, []);
 
-
   return (
     <Table
       aria-label="Example static collection table"
@@ -140,7 +141,7 @@ export default function BillTable({ itemId }) {
           <TableRow key={bid.id}>
             {(columnKey) => (
               <TableCell className="max-w-xs truncate">
-                {renderCell(bid, columnKey, fetchBill)}
+                {renderCell(bid, columnKey)}
               </TableCell>
             )}
           </TableRow>

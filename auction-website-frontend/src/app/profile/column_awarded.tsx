@@ -12,6 +12,7 @@ export type Bid = {
   auto_bidding: boolean;
   timestamp: string; // or Date if you prefer to handle it as a Date object
   status: string;
+  winner: number;
 };
 
 export const renderCell = (bid: Bid, columnKey: React.Key) => {
@@ -20,7 +21,7 @@ export const renderCell = (bid: Bid, columnKey: React.Key) => {
     case "bill":
       return (
         <>
-          <BillModal item_id={bid.id} name={bid.name}/>
+          <BillModal item_id={parseFloat(bid.id)} name={bid.name}/>
         </>
       );
     default:
