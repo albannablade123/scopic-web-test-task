@@ -1,4 +1,4 @@
-import { Pagination } from "@nextui-org/react";
+import { Input, Pagination } from "@nextui-org/react";
 import {
   Table,
   TableHeader,
@@ -7,7 +7,6 @@ import {
   TableRow,
   TableCell,
 } from "@nextui-org/table";
-import { Input } from "postcss";
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { Bid, columns, renderCell } from "../profile/column_bid";
 import { ItemService } from "../utils/actions/ItemService";
@@ -19,7 +18,7 @@ interface BidTableProps {
   userId: number;
 }
 
-export default function BidTable({userId}: BidTableProps) {
+export default function BidTable({ userId }: BidTableProps) {
   const bidService = new BidService();
   const [filterValue, setFilterValue] = useState("");
   const hasSearchFilter = Boolean(filterValue);
@@ -35,17 +34,18 @@ export default function BidTable({userId}: BidTableProps) {
     fetchBid();
   }, []);
 
-  const [page, setPage] = useState(1);
-  const rowsPerPage = 10;
+  const filteredBid = useMemo(() => {
+    let filteredListings = [...convertedBid];
 
-  const pages = Math.ceil(convertedBid.length / rowsPerPage);
+    if (hasSearchFilter) {
+      filteredListings = filteredListings.filter((item) =>
+        item.name.toLowerCase().includes(filterValue.toLowerCase())
+      );
+    }
 
-  const pageBid = useMemo(() => {
-    const start = (page - 1) * rowsPerPage;
-    const end = start + rowsPerPage;
+    return filteredListings;
+  }, [convertedBid, filterValue, hasSearchFilter]);
 
-    return convertedBid.slice(start, end);
-  }, [page]);
 
   // const [sortDescriptor, setsortDescriptor] = useState({
   //   column: "name",
@@ -70,11 +70,55 @@ export default function BidTable({userId}: BidTableProps) {
   //     setFilterValue("");
   //   }
   // }, []);
+  const onSearchChange = useCallback((value?: string) => {
+    if (value) {
+      setFilterValue(value);
+
+      setPage(1);
+    } else {
+      setFilterValue("");
+    }
+  }, []);
 
   const onClear = useCallback(() => {
     setFilterValue("");
-    //   setPage(1);
+    setPage(1);
   }, []);
+
+
+  
+  const topContent = useMemo(() => {
+    return (
+      <div className="flex flex-col gap-4">
+        <div className="flex items-end justify-between gap-3">
+          <Input
+            isClearable
+            className="w-full sm:max-w-[44%]"
+            placeholder="Search by name..."
+            startContent={<SearchIcon />}
+            value={filterValue}
+            onClear={() => onClear()}
+            onValueChange={onSearchChange}
+          />
+        </div>
+      </div>
+    );
+  }, [filterValue, onSearchChange, onClear]);
+
+ 
+  const [page, setPage] = useState(1);
+  const rowsPerPage = 10;
+
+  const pages = Math.ceil(filteredBid.length / rowsPerPage);
+
+  const pageBid = useMemo(() => {
+    const start = (page - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+
+    return filteredBid.slice(start, end);
+  }, [page, filteredBid]);
+
+
 
   return (
     <Table
@@ -83,6 +127,7 @@ export default function BidTable({userId}: BidTableProps) {
       classNames={{
         wrapper: "min-h-[222px]",
       }}
+      topContent={topContent}
       bottomContent={
         <div className="flex w-full justify-center">
           <Pagination
@@ -99,7 +144,7 @@ export default function BidTable({userId}: BidTableProps) {
       <TableHeader columns={columns}>
         {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
       </TableHeader>
-      <TableBody items={convertedBid} emptyContent={"No bid to display"}>
+      <TableBody items={pageBid} emptyContent={"No bid to display"}>
         {(bid) => (
           <TableRow key={bid.id}>
             {(columnKey) => (

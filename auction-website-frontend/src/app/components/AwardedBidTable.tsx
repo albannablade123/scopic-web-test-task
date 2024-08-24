@@ -1,4 +1,4 @@
-import { Pagination } from "@nextui-org/react";
+import { Input, Pagination } from "@nextui-org/react";
 import {
   Table,
   TableHeader,
@@ -7,7 +7,6 @@ import {
   TableRow,
   TableCell,
 } from "@nextui-org/table";
-import { Input } from "postcss";
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { Bid, columns, renderCell } from "../profile/column_awarded";
 import { ItemService } from "../utils/actions/ItemService";
@@ -38,22 +37,17 @@ export default function AwardedBidTable({userId}: BidTableProps) {
 
     filteredListings = filteredListings.filter((item) => item.winner == 1);
 
+    if (hasSearchFilter) {
+      filteredListings = filteredListings.filter((item) =>
+        item.name.toLowerCase().includes(filterValue.toLowerCase())
+      );
+    }
+
     return filteredListings;
   }, [convertedBid, filterValue, hasSearchFilter]);
 
+
   // console.log("TEST", filteredBid);
-  // const [page, setPage] = useState(1);
-  // const rowsPerPage = 10;
-
-  // const pages = Math.ceil(filteredBid.length / rowsPerPage);
-
-  // const pageBid = useMemo(() => {
-  //   const start = (page - 1) * rowsPerPage;
-  //   const end = start + rowsPerPage;
-
-  //   return filteredBid.slice(start, end);
-  // }, [page, filteredBid]);
-
   // const [sortDescriptor, setsortDescriptor] = useState({
   //   column: "name",
   //   direction: "ascending",
@@ -78,6 +72,39 @@ export default function AwardedBidTable({userId}: BidTableProps) {
   //   }
   // }, []);
 
+  const onSearchChange = useCallback((value?: string) => {
+    if (value) {
+      setFilterValue(value);
+
+      setPage(1);
+    } else {
+      setFilterValue("");
+    }
+  }, []);
+  
+  const onClear = useCallback(() => {
+    setFilterValue("");
+    setPage(1);
+  }, []);
+
+  const topContent = useMemo(() => {
+    return (
+      <div className="flex flex-col gap-4">
+        <div className="flex items-end justify-between gap-3">
+          <Input
+            isClearable
+            className="w-full sm:max-w-[44%]"
+            placeholder="Search by name..."
+            startContent={<SearchIcon />}
+            value={filterValue}
+            onClear={() => onClear()}
+            onValueChange={onSearchChange}
+          />
+        </div>
+      </div>
+    );
+  }, [filterValue, onSearchChange, onClear]);
+
   const [page, setPage] = useState(1);
   const rowsPerPage = 10;
 
@@ -90,10 +117,6 @@ export default function AwardedBidTable({userId}: BidTableProps) {
     return filteredBid.slice(start, end);
   }, [page, filteredBid]);
 
-  const onClear = useCallback(() => {
-    setFilterValue("");
-    //   setPage(1);
-  }, []);
 
   return (
     <Table
@@ -102,6 +125,7 @@ export default function AwardedBidTable({userId}: BidTableProps) {
       classNames={{
         wrapper: "min-h-[222px]",
       }}
+      topContent={topContent}
       bottomContent={
         <div className="flex w-full justify-center">
           <Pagination
