@@ -63,6 +63,10 @@ Once the containers are up and running, you can access the application at the fo
 
 Refer to OpenApi spec for REST Endpoints
 
+
+### Email Notification note:
+To ensure that email notification is working, users should update their default email in Profile and change it to a proper email so they can receive email notification
+
 ## 4. Stopping the Containers:
 
 To stop the running containers, use:
@@ -95,6 +99,8 @@ docker-compose up --build
 ```
 Port Conflicts: Ensure that ports 3000 and 8000 are not being used by other services on your host machine. You may need to stop other applications or change the ports in the docker-compose.yml file.
 
+### IMPORTANT !
+Another persistent problem is that Django command fails particularly entrypoint.sh, causing either migration or inserting fixtures to db to fail too. This is due to git automatically converting LF to CLRF. To solve this, ensure that entrypoint.sh is parsed using LF instead of CLRF before running the container. 
 
 
 ## Running Locally (Not Recommended)
