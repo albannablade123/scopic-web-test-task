@@ -14,8 +14,6 @@ services:
     volumes:
       - static:/static
       - ./auction_web_api/db.sqlite3:/app/db.sqlite3  # Bind-mount the local SQLite file to the container
-    env_file:
-      - .env
     build:
       context: ./auction_web_api
       dockerfile: Dockerfile
