@@ -24,6 +24,7 @@ from celery import shared_task
 from django.db import transaction
 from .models.bid import Bid
 from .models.item import Item
+from .models.autobid import Autobid
 
 @shared_task
 def update_bids_status_to_lost(item_id, winning_bid_id=None):
@@ -85,11 +86,9 @@ def send_outbid_notification(item_id, current_user_id):
 @shared_task
 def send_max_bid_exceeded_notification(user_id, item_id, alert_percentage):
     try:
-        print("C1")
         User = get_user_model()
         user = User.objects.get(id=user_id)  # Ensure we have a User instance
         item = Item.objects.get(id=item_id)
-        print("C2")
         email = user.notification_email
         recipient_list = [email]
         subject=f"Exceeded Maximum Bid amount for Item: {item.name}"
@@ -209,4 +208,9 @@ def close_expired_auctions():
                         send_awarded_bid_email_notificiation(item, bill, winning_bid)
 
                     update_bids_status_to_lost(item.id,  winning_bid.id if winning_bid else None)
+                    deactivate_autobids_for_item(item)
 
+
+
+def deactivate_autobids_for_item(item):
+    Autobid.objects.filter(item=item, auto_bidding_active=True).update(auto_bidding_active=False)
